@@ -1,7 +1,3 @@
-const site_settings = {'user_id' : 'jhancock1975', 
-                 'repo_name' : 'jhancock1975.github.io', 
-                 'posts_location' : 'posts'};
-
 list_files = async () => {
   url_str = 'https://api.github.com/repos/' + site_settings['user_id'] + '/' 
       + site_settings['repo_name'] + '/contents/';
