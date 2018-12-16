@@ -24,7 +24,7 @@ get_posts = async (post_element_id) => {
 github_api_call = async(api_method, api_params) => {
   url_str = site_settings[base_url]+'/'+site_settings[user_id] + '/' + site_settings[repo_name] 
     + '/' + api_method + '/' + api_params;
-  resposne = await fetch(url_str);
+  response = await fetch(url_str);
   response_json = await response.json();
   return response_json;
 }
