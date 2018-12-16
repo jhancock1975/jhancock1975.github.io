@@ -1,1 +1,3 @@
-{'user_id' : 'jhancock1975', 'blog_repo_name' : 'jhancock1975.github.io', 'posts_dir' : 'posts'}
+const site_settings = {'user_id' : 'jhancock1975', 
+                 'repo_name' : 'jhancock1975.github.io', 
+                 'posts_location' : 'posts'};
