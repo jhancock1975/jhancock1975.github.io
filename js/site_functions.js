@@ -19,6 +19,8 @@ github_api_call = async(api_category, api_method, api_params) => {
  * it expects there to be a directory called posts in the
  * top level of the repository, and attaches the posts
  * to child divs of postDiv
+ *
+ * @param postDiv: DOM object that we attach blog posts to
  */
 get_posts = async(postDiv) => {
    github_api_call('repos', 'contents', 'posts')
