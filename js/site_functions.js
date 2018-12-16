@@ -33,7 +33,7 @@ get_posts = async(postDiv) => {
            .then((blog_post) => {
              console.log(blog_post);
              var newPostDiv = document.createElement('div');
-             newPostDiv.innerHTML = atob(blog_post[content]);
+             newPostDiv.innerHTML = atob(blog_post[post_contents]);
              postDiv.appendChild(newPostDiv);
          })
        })
