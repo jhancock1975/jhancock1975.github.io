@@ -1,4 +1,4 @@
-const site_settings = {'user_id' : 'jhancock_1975', 
+const site_settings = {'user_id' : 'jhancock1975', 
                  'repo_name' : 'jhancock1975.github.io', 
                  'posts_location' : 'posts'};
 
@@ -16,5 +16,5 @@ get_posts = async (post_element_id) => {
   response = await fetch(url_str);
   postsJson = await response.json(); //extract JSON from the http response
   posts_div = document.getElementById('blog_posts');
-  posts.innerText = postsJson;
+  posts_div.innerText = postsJson;
 }
