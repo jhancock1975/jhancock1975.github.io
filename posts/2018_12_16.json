@@ -1,12 +1,18 @@
 {"created" : "2018-12-16 07:00:00.000",
 "post_title" : 'December 16th, 2018',
-"post_contents" : "<p>Things were going great with the Github API blog project, until I blew my quota.\n"+
-  "I did not know unauthenticated requets are limited to 60 per hour per IP address.</p>\n" +
- "<p>Interesting things from Kaggle tutorial:</p>\n"+
- "<ul>\n"+
- "  <li>Lists tutorial:</li>\n"+
- "  <ul>\n"+
- "    <li>Python numbers have a .as_integer_raio() method that returns the numerator and denomenator.</li>\n"+
- "  </ul>\n" +
- "</ul>";
+"post_contents" : `<p>December 16th, 2018</p>
+    <p>This morning, I went off on a tangent.  Github has a rest API.  I added some proof-of-concept code to this page
+      in the js/site_functions.js file.  It should be possible to read and write blog posts using the Github rest API.
+      The proof of concept code is now setting the contents of the div with id blog_posts at the top of this page.
+    </p>
+    <p>Back to the Kaggle tutorials, onto a review of lists in Python.
+    <p>Things were going great with the Github API blog project, until I blew my quota.
+  I did not know unauthenticated requets are limited to 60 per hour per IP address.</p>
+ <p>Interesting things from Kaggle tutorial:</p>
+ <ul>
+   <li>Lists tutorial:</li>
+   <ul>
+     <li>Python numbers have a .as_integer_raio() method that returns the numerator and denomenator.</l
+   </ul>
+ </ul>`
 }
