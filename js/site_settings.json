@@ -5,9 +5,9 @@
  if we are using defined strings to index the
  JSON objects.  This is an assist in debugging.
  */
-const user_id = 'user_id';
-const repo_name = 'repo_name';
-const posts_location = 'posts_location';
+const user_id = "user_id";
+const repo_name = "repo_name";
+const posts_location = "posts_location";
 const site_settings = {user_id : "jhancock1975", 
                  repo_name : "jhancock1975.github.io", 
                  posts_location : "posts"};
