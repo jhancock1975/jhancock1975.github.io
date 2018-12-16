@@ -4,6 +4,7 @@ site_settings = async() => {
    site_settings = await response.json();
    console.debug('site settings ', site_settings);
 }
+const site_settings = await site_settings();
 list_files = async (user_id) => {
    url_str = 'https://api.github.com/repos/' + user_id + '/jhancock1975.github.io/contents/';
    response = await fetch(url_str);
