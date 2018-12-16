@@ -1,0 +1,30 @@
+{'created' : '2018-12-15 12:00:00.000',
+'post_title' : 'December 15th, 2018',
+'post_contents' : "<p> Notes for December 15th, 2018</p>\n"+
+"<p>For my 5 day plus training, I will be studying the material in </p>\n'+
+"<ul>\n"+
+  "<li><a href='https://www.kaggle.com/learn/overview'>https://www.kaggle.com/learn/overview</a></li>\n"+
+"</ul>\n"+
+"<p> If I have time I will also study:</p>\n"+
+"<ul>\n"+
+  "<li><a href='http://karpathy.github.io/neuralnets/'>http://karpathy.github.io/neuralnets/</a><li>\n"+
+  <"li><a href='https://github.com/GokuMohandas/practicalAI'>https://github.com/GokuMohandas/practicalAI</a><li>\n"+
+"</ul>\n"+
+"<p>Useful things I learned from the Python intro:</p>\n"+
+"<ul>\n"+
+  "<li>First lesson:\n"+
+  "<ul>\n"+
+    "<li>Python floor operator: //</li>\n"+
+  "</ul>\n"+
+  "</li>\n"+
+  "<li>Lesson on functions &amp; getting help:\n"+
+  "<ul>\n"+
+    "<li>can give int() function as key to min, <i>i.e.<i/>: min(string_1, string_2, string_3, key=int)\n"+
+  "</li>\n"+
+  "</ul>\n"+
+  "<li>Lesson on booleans:\n"+
+  "<ul>\n"+
+    "<li>Python will automatically convert booleans to integers: True + True = 2.</li>\n"+
+  "</ul>\n"+
+    "<ul>\n"+
+"</ul>";
