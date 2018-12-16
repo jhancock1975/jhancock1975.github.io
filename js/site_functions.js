@@ -19,5 +19,5 @@ github_api_call = async() => {
     + '/' + api_method + '/' + api_params;
   resposne = await fetch(url_str);
   response_json = await response.json();
-  return resposne_json;
+  return response_json;
 }
