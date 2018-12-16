@@ -17,7 +17,7 @@ github_api_call = async(api_category, api_method, api_params) => {
 const post_contents ='post_contents';
 const post_title = 'post_title';
 const created = 'created';
-const contents = 'contents';
+const content = 'content';
 /**
  * This function gets blog posts from a github repository
  * it expects there to be a directory called posts in the
@@ -36,7 +36,7 @@ get_posts = async(postDiv) => {
              //we have the individual posts
              console.log(blog_post);
              var newPostDiv = document.createElement('div');
-             newPostDiv.innerHTML = JSON.parse(atob(blog_post[contents]))[post_contents];
+             newPostDiv.innerHTML = JSON.parse(atob(blog_post[content]))[post_contents];
              postDiv.appendChild(newPostDiv);
          })
        })
