@@ -46,10 +46,16 @@ get_posts = async(postDiv, tokenText) => {
              //we have the individual posts
              console.debug('blog_post ', blog_post);
              blog_url = blog_post[html_url];
+             var should_add = false;
              if (! postDiv.url_list){
                postDiv.url_list = [blog_url];
-             } else if (!postDiv.url_list.includes(blog_url)){
+               should_add = true;
+             }
+             if (!postDiv.url_list.includes(blog_url)){
                postDiv.url_list.push(blog_url);
+               should_add = true;
+             }
+             if (should_add){
               var newPostDiv = document.createElement('div');
               newPostDiv.innerHTML = atob(blog_post[content]);
               postDiv.appendChild(newPostDiv);
