@@ -11,6 +11,6 @@ function ContentHandler(){
  *
  * @param tokenText: DOM text input element, mean to hold an OAUTH token
  */
-ContentHander.prototype.fetchPosts = (tokenText) => {
+ContentHandler.prototype.fetchPosts = (tokenText) => {
   gitHubBroker.get_posts(document.getElementById('blog_posts'), tokenText.value);
  }
