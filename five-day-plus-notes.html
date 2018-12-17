@@ -12,7 +12,7 @@
   <script src='./js/site_functions.js'></script>
   <script src='./js/content_handler.js'></script>
 </head>
-<body onready='new ContentHandler()'>
+<body onload='new ContentHandler()'>
 <h1>5 Day Plus Training Notes</h1>
   <label>Enter OAuth Token, and tab or click out to set </label>
   <input type = 'text' id = 'tokenText' name = 'tokenText' onfocusout = 'fetchPosts(tokenText)'/>
