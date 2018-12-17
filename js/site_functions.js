@@ -49,7 +49,7 @@ get_posts = async(postDiv, tokenText) => {
              if (! postDiv.url_list){
                postDiv.url_list = [blog_url];
              } else if (!postDiv.url_list.includes(blog_url)){
-               postDiv.url_list.push(blug_url);
+               postDiv.url_list.push(blog_url);
               var newPostDiv = document.createElement('div');
               newPostDiv.innerHTML = atob(blog_post[content]);
               postDiv.appendChild(newPostDiv);
