@@ -10,11 +10,12 @@ github_api_call = async(api_category, api_method, api_params, tokenText) => {
   url_str = site_settings[base_url]+'/'+ api_category + '/' + site_settings[user_id] 
     + '/' + site_settings[repo_name] + '/' + api_method + '/' + api_params;
   var headers_obj = {'Accept': 'application/vnd.github.v3+json'};
-  if (tokenText !== ""){
+  if ((tokenText !== undefined) && (tokenText !== "")){
     console.debug('setting oath token value ', tokenText);
     headers_obj['Authorization'] = 'token ' + tokenText;
   } else {
-    console.debug('The token_val is blank, I am not using authorization for API calls.');
+    console.debug('The token_val is blank or undefined.');
+    console.debug('I am not using authorization for API calls.');
   }
   var response = await fetch(url_str, 
                          {method : 'GET', 
