@@ -30,15 +30,14 @@ get_posts = async(postDiv) => {
    github_api_call('repos', 'contents', 'posts')
      .then((blog_posts) => {
        //we have the list of blog posts
+       //TODO: recursively traverse contents
        blog_posts.map((blog_post) => {
          github_api_call('repos', 'contents', 'posts'+'/'+blog_post['name'])
            .then((blog_post) => {
              //we have the individual posts
              console.debug('blog_post ', blog_post);
-             console.debug('blog_post[content] ', blog_post[content])
-             console.debug('JSON.parse(atob(blog_post[content])) ', JSON.parse(atob(blog_post[content])))
              var newPostDiv = document.createElement('div');
-             newPostDiv.innerHTML = JSON.parse(atob(blog_post[content]))[post_contents];
+             newPostDiv.innerHTML = atob(blog_post[content]))
              postDiv.appendChild(newPostDiv);
          })
        })
