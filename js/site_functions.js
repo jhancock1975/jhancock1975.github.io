@@ -1,4 +1,4 @@
-GitHubBroker = () => {
+function GitHubBroker(){
   /**
    * Convenience method for making API call.
    * 
