@@ -14,9 +14,7 @@ github_api_call = async(api_category, api_method, api_params) => {
   response_json = await response.json();
   return response_json;
 }
-const post_contents ='post_contents';
-const post_title = 'post_title';
-const created = 'created';
+const name = 'name';
 const content = 'content';
 /**
  * This function gets blog posts from a github repository
@@ -32,12 +30,12 @@ get_posts = async(postDiv) => {
        //we have the list of blog posts
        //TODO: recursively traverse contents
        blog_posts.map((blog_post) => {
-         github_api_call('repos', 'contents', 'posts'+'/'+blog_post['name'])
+         github_api_call('repos', 'contents', 'posts'+'/'+blog_post[name])
            .then((blog_post) => {
              //we have the individual posts
              console.debug('blog_post ', blog_post);
              var newPostDiv = document.createElement('div');
-             newPostDiv.innerHTML = atob(blog_post[content]))
+             newPostDiv.innerHTML = atob(blog_post[content]);
              postDiv.appendChild(newPostDiv);
          })
        })
