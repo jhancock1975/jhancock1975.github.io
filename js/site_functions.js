@@ -26,6 +26,7 @@ github_api_call = async(api_category, api_method, api_params, tokenText) => {
 }
 const name = 'name';
 const content = 'content';
+const html_url = 'html_url';
 /**
  * This function gets blog posts from a github repository
  * it expects there to be a directory called posts in the
@@ -44,9 +45,17 @@ get_posts = async(postDiv, tokenText) => {
            .then((blog_post) => {
              //we have the individual posts
              console.debug('blog_post ', blog_post);
-             var newPostDiv = document.createElement('div');
-             newPostDiv.innerHTML = atob(blog_post[content]);
-             postDiv.appendChild(newPostDiv);
+             blog_url = blog_post[html_url];
+             if (! postDiv.url_list){
+               postDiv.url_list = [blog_url];
+             } else if (!postDiv.url_list.includes(blog_url)){
+               postDiv.url_list.push(blug_url);
+              var newPostDiv = document.createElement('div');
+              newPostDiv.innerHTML = atob(blog_post[content]);
+              postDiv.appendChild(newPostDiv);
+             } else {
+               console.debug('we already have a div that shows ', blog_url);
+             }
          })
        })
    })
