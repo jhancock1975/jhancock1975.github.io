@@ -1,9 +1,10 @@
 /**
 * uses functionality defined in site_functions.js
 */
-ContentHandler = () => {
+function ContentHandler(){
+ gitHubBroker = new GitHubBroker();
  //load blog posts from github into blog_posts div:
- get_posts(document.getElementById('blog_posts'));
+ gitHubBroker.get_posts(document.getElementById('blog_posts'));
 
  /**
  * event handler for when OAUTH text box token is set
@@ -11,6 +12,6 @@ ContentHandler = () => {
  * @param tokenText: DOM text input element, mean to hold an OAUTH token
  */
  ContentHander.prototype.fetchPosts = (tokenText) => {
-  get_posts(document.getElementById('blog_posts'), tokenText.value);
+  gitHubBroker.get_posts(document.getElementById('blog_posts'), tokenText.value);
  }
 }
