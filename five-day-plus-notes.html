@@ -9,9 +9,16 @@
    -->
   <script src='js/site_settings.js'></script>
   
+  <!-- this script has the GitHubBroker object for storing & retrieving
+       blog post data in GitHub -->
   <script src='./js/site_functions.js'></script>
+  
+  <!-- this script has the ContentHandler object that is a client of
+       the GitHubBroker -->
   <script src='./js/content_handler.js'></script>
 </head>
+<!-- note we do not put 'var' in front of contentHandler, so that it is
+     in the global scope and accessible to DOM elements on this page -->
 <body onload='contentHandler = new ContentHandler()'>
 <h1>5 Day Plus Training Notes</h1>
   <label>Enter OAuth Token, and tab or click out to set </label>
