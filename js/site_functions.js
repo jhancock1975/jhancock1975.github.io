@@ -1,3 +1,4 @@
+var token_val;
 /**
  * Convenience method for making API call.
  * 
@@ -9,14 +10,17 @@
 github_api_call = async(api_category, api_method, api_params) => {
   url_str = site_settings[base_url]+'/'+ api_category + '/' + site_settings[user_id] 
     + '/' + site_settings[repo_name] + '/' + api_method + '/' + api_params;
-
-  response = await fetch(url_str, 
-                         {method : 'GET', 
-                          headers: {'Accept': 'application/vnd.github.v3+json',
-                                    'Authorization': 'token c489554333cbedbb81f3af0f09c7bab35cd2dfcc'}
-                         });
-  response_json = await response.json();
-  return response_json;
+  if (token_val === undefined){
+    throw 'please set a value for token_val';
+  } else {
+    response = await fetch(url_str, 
+                           {method : 'GET', 
+                            headers: {'Accept': 'application/vnd.github.v3+json',
+                                      'Authorization': 'token ' + token_val}
+                           });
+    response_json = await response.json();
+    return response_json;
+  }
 }
 const name = 'name';
 const content = 'content';
