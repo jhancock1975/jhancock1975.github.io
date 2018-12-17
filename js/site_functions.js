@@ -10,17 +10,18 @@ var token_val;
 github_api_call = async(api_category, api_method, api_params) => {
   url_str = site_settings[base_url]+'/'+ api_category + '/' + site_settings[user_id] 
     + '/' + site_settings[repo_name] + '/' + api_method + '/' + api_params;
-  if (token_val === undefined){
-    throw 'please set a value for token_val';
+  var headers_obj = {'Accept': 'application/vnd.github.v3+json'};
+  if (token_val !== undefined){
+    headers_obj['Authorization'] = 'token ' + token_val;
   } else {
-    response = await fetch(url_str, 
-                           {method : 'GET', 
-                            headers: {'Accept': 'application/vnd.github.v3+json',
-                                      'Authorization': 'token ' + token_val}
-                           });
-    response_json = await response.json();
-    return response_json;
+    console.debug('token_val not set, so not using authentication');
   }
+  response = await fetch(url_str, 
+                         {method : 'GET', 
+                          headers: headers_obj
+                         });
+  response_json = await response.json();
+  return response_json;
 }
 const name = 'name';
 const content = 'content';
