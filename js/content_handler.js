@@ -5,5 +5,6 @@
 //load blog posts from github into blog_posts div:
 //get_posts(document.getElementById('blog_posts'), document.getElementById('tokenText').value);
 fetchPosts = (tokenTextName) =>{
+ console.debug('tokenTextName = ', tokenTextName);
  console.debug(document.getElementById(tokenTextName).value);
 }
