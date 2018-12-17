@@ -34,7 +34,9 @@ get_posts = async(postDiv) => {
          github_api_call('repos', 'contents', 'posts'+'/'+blog_post['name'])
            .then((blog_post) => {
              //we have the individual posts
-             console.log(blog_post);
+             console.debug('blog_post ', blog_post);
+             console.debug('blog_post[content] ', blog_post[content])
+             console.debug('JSON.parse(atob(blog_post[content])) ', JSON.parse(atob(blog_post[content])))
              var newPostDiv = document.createElement('div');
              newPostDiv.innerHTML = JSON.parse(atob(blog_post[content]))[post_contents];
              postDiv.appendChild(newPostDiv);
