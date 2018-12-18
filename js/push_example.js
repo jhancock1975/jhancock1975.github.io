@@ -329,7 +329,7 @@ function callbackErrorOrThrow(cb, path) {
 }
 
 
-class Repository {
+class Repository extends Requestable{
   /**
     * Create a Repository.
     * @param {string} fullname - the full name of the repository
