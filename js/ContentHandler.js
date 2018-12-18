@@ -2,7 +2,7 @@
 * uses functionality defined in site_functions.js
 */
 function ContentHandler(){
-  var gitHubBroker = new GitHubBroker();
+  this.gitHubBroker = new GitHubBroker();
   self = this;
   var oauthToken; 
   setOauthToken = (tokenValue) => {
