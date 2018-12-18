@@ -35,26 +35,16 @@
       <li><a href="https://www.acm.org">ACM</a></li>
     </ul>
     <p>Above, some links to sites I visit from time to time.</p>
-    <h2>Post editor</h2>
-    <ul>
-      <li><a href="poster.html">Blog posting editor</a></li>
-    </ul>
-    <p>Click the link above to enter a blog post.</p>
-
   </div>
   <!--//end #leftColumn//-->
   <div id="centerColumn">
     <h2>Blog Posts</h2>
-    <p>Click the link below to load blog entries using the GitHub rest API. 
-      enter an OAUTH token value in the text box to make the API calls 
+    <p>Write a blog post in the text area below. Write your post in HTML.
+      Enter an OAUTH token value in the text box to make the API calls 
       authenticated, and avoid exceeding your API call volume quota.</p>
-    <h2>Load blog posts</h2>
-    <p><a onclick='contentHandler.fetchPosts(blog_posts)'>Load blog posts</a></p>
-    <p><input type = 'text' id = 'tokenText' name = 'tokenText' 
-          onfocusout = 'contentHandler.setOauthToken(tokenText.value)'/></p>
-    <blockquote>
-      <p><strong>Blog Posts</strong><br /> </p> </blockquote>
-      <div class='blogpost' id='blog_posts' name='blog_posts'></div>
+    <h2>Write a blog post</h2>
+    <p><a onclick='contentHandler.createPost(post_text.value)'>Save post</a></p>
+    <p><textarea id='post_text' name='post_text' rows='4' cols='50'></textarea></p>
   </div>
   <!--//end #centerColumn//-->
   <div id="footer"> <a target="_blank" href="http://validator.w3.org/"

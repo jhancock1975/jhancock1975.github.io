@@ -18,5 +18,25 @@ animals = pd.DataFrame({'Cows': [12, 20], 'Goats': [22, 19]}, index=['Year 1', '
 
 <pre> df.column_name.iloc[:10]</pre>
 
+<p>Pick and choose rows:</p>
 
+<pre>df.iloc[[1,2,3,5,8]]</pre>
+
+<p>Still doing the Pandas tutorial, this is the correct answer for number 7:</p>
+<pre>df = reviews[['country', 'variety']].iloc[0:100]</pre>
+<p>Which seems to me to be the opposite of what they just quoted in the
+documentation</p>
+
+<p>Another good point about doing the Kaggle tutorials is that it teaches using
+  the  Kaggle environment, which is basically Jupyter, but with bells &amp; 
+  whistles that Kaggle has added on.</p>
+
+<p>Median value of dataframe df's column_name column:</p>
+<pre>df.describe().column_name['50%']</pre>
+
+<p>Wow, didn't know this would work.  Subtract mean value of column with name
+  column_name from every value in column_name, using some dataframe named
+  df:</p>
+
+<pre>mean_column_name_values = df.column_name - (df.describe().column_name['mean'])</pre>
 
