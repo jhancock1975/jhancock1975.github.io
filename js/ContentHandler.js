@@ -1,11 +1,17 @@
 /**
-* uses functionality defined in site_functions.js
-*/
+ * uses functionality defined in site_functions.js
+ *
+ * 
+ * we rely on code at https://crockford.com/javascript/private.html
+ * for object encapsulation
+ * TODO - verify these encapsulation techniques actually work
+ */
 function ContentHandler(){
   this.gitHubBroker = new GitHubBroker();
+  //save reference to this for use in privileged methods
   self = this;
   self.oathToken = '';
-  setOauthToken = (tokenValue) => {
+  self.setOauthToken = (tokenValue) => {
     self.oauthToken = tokenValue; 
  }
 }
