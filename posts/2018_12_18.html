@@ -1,0 +1,12 @@
+<p>Entry for December 18th, 2018</p>
+<p>Today, on the GitBlog side I will put in the post functionality, I think.</p>
+<p>Another thought is I should probably try twitter bootstrap css</p>
+<p>Right now, I'll continue on the Pandas tutorial on the Kaggle site.</p>
+<p>Here is a nice one-liner for reading a dataframe from sqlite3:</p>
+<pre>
+music_reviews = pd.read_sql_query('select * from artists', sqlite3.connect('../input/pitchfork-data/database.sqlite'))
+</pre>
+<p>And here is how to set the values of indices:</p>
+<pre>
+animals = pd.DataFrame({'Cows': [12, 20], 'Goats': [22, 19]}, index=['Year 1', 'Year 2'])
+</pre>
