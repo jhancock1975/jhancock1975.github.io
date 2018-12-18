@@ -67,4 +67,11 @@ function GitHubBroker(){
          })
      })
   }
+
+  GitHubBroker.prototype.save_post(post_text, oauthToken){
+    //take the code from
+    //https://medium.freecodecamp.org/pushing-a-list-of-files-to-the-github-with-javascript-b724c8c09b66
+    console.debug("saving post text ", post_text);
+    console.debug("token = ", oauthToken);
+  }
 }
