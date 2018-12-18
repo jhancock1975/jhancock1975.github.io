@@ -4,9 +4,9 @@
 function ContentHandler(){
   this.gitHubBroker = new GitHubBroker();
   self = this;
-  var oauthToken; 
+  self.oathToken = '';
   setOauthToken = (tokenValue) => {
-    oauthToken = tokenValue; 
+    self.oauthToken = tokenValue; 
  }
 }
 /**
