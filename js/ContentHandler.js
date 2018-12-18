@@ -14,5 +14,5 @@ function ContentHandler(){
  * @param tokenText: DOM text input element, mean to hold an OAUTH token
  */
 ContentHandler.prototype.fetchPosts = (blogPostsDiv) => {
-  gitHubBroker.get_posts(blogPostsDiv, oauthToken);
+  this.gitHubBroker.get_posts(blogPostsDiv, oauthToken);
  }
