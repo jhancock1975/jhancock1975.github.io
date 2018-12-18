@@ -285,7 +285,6 @@ to the result set`;
    }
 }
 
-module.exports = Requestable;
 
 // ////////////////////////// //
 //  Private helper functions  //
