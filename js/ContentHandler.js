@@ -3,6 +3,7 @@
 */
 function ContentHandler(){
   var gitHubBroker = new GitHubBroker();
+  self = this;
   var oauthToken; 
   setOauthToken = (tokenValue) => {
     oauthToken = tokenValue; 
@@ -14,5 +15,5 @@ function ContentHandler(){
  * @param tokenText: DOM text input element, mean to hold an OAUTH token
  */
 ContentHandler.prototype.fetchPosts = (blogPostsDiv) => {
-  this.gitHubBroker.get_posts(blogPostsDiv, oauthToken);
+  self.gitHubBroker.get_posts(blogPostsDiv, oauthToken);
  }
