@@ -371,6 +371,17 @@ class Repository extends Requestable{
          newBranch = oldBranch;
          oldBranch = 'master';
       } 
+
+       return this.getRef(`heads/${oldBranch}`)
+         .then((response) => {
+            let sha = response.data.object.sha;
+            return this.createRef({
+               sha,
+               ref: `refs/heads/${newBranch}`,
+            }, cb);
+         });
+   }
+
    /**
     * Get a reference
     * @see https://developer.github.com/v3/git/refs/#get-a-reference
