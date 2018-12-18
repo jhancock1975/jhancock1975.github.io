@@ -47,10 +47,20 @@ blockquote p {
 margin:.2em;
 }
 
+.blogpost{
+margin:1em;
+padding:.5em;
+background-color:#eeeeee;
+border-top:1px solid #cccccc;
+border-bottom:1px solid #cccccc;
+}
+
+p.blogpost  {
+margin:.2em;
+}
 #container { 	
 margin:0 auto;
 padding:0;
-/*width:650px;*/
 text-align:left;
 vertical-align: middle;	
 background-color:#ffffff;
