@@ -10,7 +10,7 @@ function ContentHandler(){
   this.gitHubBroker = new GitHubBroker();
   //save reference to this for use in privileged methods
   self = this;
-  self.oathToken = '';
+  self.oauthToken = '';
   self.setOauthToken = (tokenValue) => {
     self.oauthToken = tokenValue; 
  }
