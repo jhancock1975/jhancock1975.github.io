@@ -23,7 +23,7 @@
 <div id="container">
   <div id="header">
     <h1>jhancock1975 blog</h1>
-    <h2>blog 100% powered by GitHub - totally unofficial, not sanctioned in
+    <h2>blog powered by GitHub - totally unofficial, not sanctioned in
        any way by the powers that be at GitHub</h2>
   </div>
   <!--//end #headern//-->
@@ -43,7 +43,7 @@
       enter an OAUTH token value in the text box to make the API calls 
       authenticated, and avoid exceeding your API call volume quota.</p>
     <h2>Load blog posts</h2>
-    <p><a onclick='contentHandler.fetchPosts()'>Load blog posts</a></p>
+    <p><a onclick='contentHandler.fetchPosts(blog_posts)'>Load blog posts</a></p>
     <p><input type = 'text' id = 'tokenText' name = 'tokenText' 
           onfocusout = 'contentHandler.setOauthToken(tokenText.value)'/></p>
     <ul>
