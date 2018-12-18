@@ -169,7 +169,7 @@ function GithubAPI(auth) {
     }
 };
 
-if (token_val === '') || (token_val === undefined){
+if ((token_val === '') || (token_val === undefined)){
   throw 'Please set a value for the token';
 else {
   let api = new GithubAPI({token: token_val});
