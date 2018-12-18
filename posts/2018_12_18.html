@@ -10,3 +10,13 @@ music_reviews = pd.read_sql_query('select * from artists', sqlite3.connect('../i
 <pre>
 animals = pd.DataFrame({'Cows': [12, 20], 'Goats': [22, 19]}, index=['Year 1', 'Year 2'])
 </pre>
+<p>Select the first row of a dataframe df:</p>
+
+<pre>df.iloc[0]</pre>
+
+<p>First 10 values of a column:</p>
+
+<pre> df.column_name.iloc[:10]</pre>
+
+
+
