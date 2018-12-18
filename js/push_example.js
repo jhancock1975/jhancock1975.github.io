@@ -537,7 +537,6 @@ this.__apiBase);
    }
 }
 
-module.exports = GitHub;
 
 /**
  * this code copied from:
