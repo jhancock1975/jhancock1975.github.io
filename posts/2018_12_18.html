@@ -40,3 +40,20 @@ documentation</p>
 
 <pre>mean_column_name_values = df.column_name - (df.describe().column_name['mean'])</pre>
 
+<p>It seems like:</p>
+
+<pre>df.column_name.value_counts()</pre>
+
+<p>and</p>
+
+<pre>df.groupby('column_name').size()</pre>
+
+<p>Get the same data, but it is organized differently.  It seems like the point
+  of it in the tutorial is that </p>
+
+<pre>df.groupby('column_name').size() creates a series with indices that are 
+  values we are counting. </pre>
+
+<p>df.groupby(['column_1', 'column_2']) creates a multi-index</p>
+
+
