@@ -56,4 +56,33 @@ documentation</p>
 
 <p>df.groupby(['column_1', 'column_2']) creates a multi-index</p>
 
+<p>Important syntax note for dataframes - one can reference a column, and then
+  apply a function to every value in the column, like so:</p>
+
+<pre>df.column_name.function()</pre>
+
+<p>I think the function must be a method of the Pandas Series object.</p>
+
+<p>I was thinking of stealing some example code for implementing commit and push
+  for the blog, but it appears to be a dead end - there is some mature code for
+  using the Github REST API in JavaScript, but I would end up adding thousands
+  of lines of code to get that functionality - lots of dependent libraries, 
+  so in the end it will probably be better to follow the tutorial and do the
+  steps the author recommends, but write my own functions, referencing the 
+  github API documentation.</p>
+
+<p> I am trying kaggle in FireFox.  It seems chrome is unstable for this. Also,
+  it chrome flickers when committing, which is really not good.</p>
+
+<p> I think Kaggle itself, might be kind of busy, but it looks like the commit
+  dialog box that opens does not cause the page to flicker in FireFox, which is
+  wonderful. </p>
+
+<p>  Just learned something important - pre-trained models are available on
+  Kaggle.  For example, Resnet50.</p>
+
+<p> Ok, maybe I got too excited there, looks like they're possibly taking credit
+  for some models built in to TensorFlow.  Oh, maybe not, I think maybe they
+  have weights stored for us to use.</p>
+
 
