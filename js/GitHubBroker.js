@@ -68,7 +68,7 @@ function GitHubBroker(){
      })
   }
 
-  GitHubBroker.prototype.save_post = asnyc(post_text, oauthToken) => {
+  GitHubBroker.prototype.save_post = async(post_text, oauthToken) => {
     console.debug("saving post text ", post_text);
     console.debug("token = ", oauthToken);
 
