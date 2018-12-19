@@ -4,10 +4,19 @@ function GitHubBroker(){
    * 
    * @author: jhancock1975
    * @param api_category: github API category name, example: repos
+   *
    * @param api_method: github API endpoint method, example: contents
+   *
    * @param api_params: github method parameters, example: posts (the name of some directory)
+   * @param tokenText - Github issued OAUTH token, user must request from 
+   *  github
+   *
+   *  http_verb - HTTP verb for API call, GET, POST, PUT, DELETE, etc.
+   *
+   *  post_data - JSON.stringify'd data
    */
-  github_api_call = async(api_category, api_method, api_params, tokenText) => {
+  github_api_call = async(api_category, api_method, api_params, tokenText,
+    http_verb = 'GET', post_data) => {
     url_str = site_settings[base_url]+'/'+ api_category + '/' + site_settings[user_id] 
       + '/' + site_settings[repo_name] + '/' + api_method + '/' + api_params;
     console.debug('url_str = ', url_str);
@@ -20,8 +29,9 @@ function GitHubBroker(){
       console.debug('I am not using authorization for API calls.');
     }
     var response = await fetch(url_str, 
-                           {method : 'GET', 
-                            headers: headers_obj
+                           {method : http_verb, 
+                            headers: headers_obj,
+                            body: post_data
                            });
     var response_json = await response.json();
     return response_json;
@@ -76,25 +86,63 @@ function GitHubBroker(){
     //take the code from
     // https://gist.github.com/iktash/31ccc1d8582bd9dcb15ee468c7326f2d    
     // these are the steps to do:
-    getCurrentCommitSHA(oauthToken);
-    // getCurrentTreeSHA
-    // createFiles
+    var commit_sha = await getCurrentCommitSHA(oauthToken);
+    var tree_sha = await getCurrentTreeSHA(oauthToken, commit_sha);
+    await createFiles(post_text, oauthToken);
     // createTree
     // createCommit
     // updateHead
   }
 
-   
   /**
    * retrieves current commit sha from repository
+   * 
+   * @param oauthToken - user supplied oauth token, user must request
+   *   token from Github
    */
-  getCurrentCommitSHA = async(oauthToken) => {
+  getCurrentCommitSHA = async(oauthToken, getCurrentTreeSHA) => {
     console.debug('getting currrent commit sha');
     console.debug('oauth token = ', oauthToken);
-    var result = await github_api_call('repos', 'git/refs',
+    var ref = await github_api_call('repos', 'git/refs',
       'heads/'+site_settings[branch_name], oauthToken);
-    console.debug('getCurrentCommitSHA::result = ', result);
-    return result;
-  } 
+    return ref.object.sha;
+    } 
 
+   /**
+    * retrieves current tree SHA
+    *
+    * @param oauthToken - user supplied oauth token, user must request
+    *   token from Github
+    * 
+    * @param sha - should be SHA value from some commit
+    */
+    getCurrentTreeSHA = async(oauthToken, sha) =>{
+      console.debug("getCurrentTreeSHA::oauthToken = ", oauthToken);
+      console.debug("getCurrentTreeSHA::sha= ", sha);
+      var commit = await github_api_call('repos', 'git/commits',
+        sha, oauthToken);
+      console.debug('getCurrentTreeSha:: tree sha = ', commit.tree.sha);
+      return commit.tree.sha;
+    }
+  
+ /**
+  * creates blob objects for files to commit
+  *
+  * @param post_text - text to save as blog post
+  *
+  * @param oauthToken - user supplied oauth token, user must request
+  *   token from Github
+  *
+  * @param sha - should be SHA value of current tree
+  */
+   createFiles = async(post_text, oauthToken) => {
+     var blob = await github_api_call('repos', 'git/blobs', "",
+       oauthToken, 'POST', 
+       JSON.stringify({
+         content: {content: btoa(post_text), 
+         encoding: 'base64'}, 
+         path: (new Date().getTime()+".html")
+         }));
+      console.debug('blob = ', blob);
+   }
 }
