@@ -10,6 +10,7 @@ function GitHubBroker(){
   github_api_call = async(api_category, api_method, api_params, tokenText) => {
     url_str = site_settings[base_url]+'/'+ api_category + '/' + site_settings[user_id] 
       + '/' + site_settings[repo_name] + '/' + api_method + '/' + api_params;
+    console.debug('url_str = ', url_str);
     var headers_obj = {'Accept': 'application/vnd.github.v3+json'};
     if ((tokenText !== undefined) && (tokenText !== "")){
       console.debug('setting oath token value ', tokenText);
@@ -75,11 +76,25 @@ function GitHubBroker(){
     //take the code from
     // https://gist.github.com/iktash/31ccc1d8582bd9dcb15ee468c7326f2d    
     // these are the steps to do:
-    // getCurrentCommitSHA()
+    getCurrentCommitSHA(oauthToken);
     // getCurrentTreeSHA
     // createFiles
     // createTree
     // createCommit
     // updateHead
   }
+
+   
+  /**
+   * retrieves current commit sha from repository
+   */
+  getCurrentCommitSHA = async(oauthToken) => {
+    console.debug('getting currrent commit sha');
+    console.debug('oauth token = ', oauthToken);
+    var result = await github_api_call('repos', 'git/refs',
+      'heads/'+site_settings[branch_name], oauthToken);
+    console.debug('getCurrentCommitSHA::result = ', result);
+    return result;
+  } 
+
 }
