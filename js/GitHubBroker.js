@@ -69,9 +69,17 @@ function GitHubBroker(){
   }
 
   GitHubBroker.prototype.save_post(post_text, oauthToken){
-    //take the code from
-    //https://medium.freecodecamp.org/pushing-a-list-of-files-to-the-github-with-javascript-b724c8c09b66
     console.debug("saving post text ", post_text);
     console.debug("token = ", oauthToken);
+
+    //take the code from
+    // https://gist.github.com/iktash/31ccc1d8582bd9dcb15ee468c7326f2d    
+    // these are the steps to do:
+    // getCurrentCommitSHA()
+    // getCurrentTreeSHA
+    // createFiles
+    // createTree
+    // createCommit
+    // updateHead
   }
 }
