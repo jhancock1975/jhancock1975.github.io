@@ -4,20 +4,13 @@ function GitHubBroker(){
    * 
    * @author: jhancock1975
    * @param api_category: github API category name, example: repos
-   *
    * @param api_method: github API endpoint method, example: contents
-   *
-   * @param api_params: github method parameters, example: posts (the name of some directory)
-   * @param tokenText - Github issued OAUTH token, user must request from 
-   *  github
-   *
-   *  http_verb - HTTP verb for API call, GET, POST, PUT, DELETE, etc.
-   *
-   *  post_data - JSON.stringify'd data
+   * @param api_params: github method parameters, example: posts (the name of
+   * some directory)
    */
-  github_api_call = async(api_category, api_method, api_params, tokenText,
-    http_verb = 'GET', post_data) => {
-    url_str = site_settings[base_url]+'/'+ api_category + '/' + site_settings[user_id] 
+  github_get_request = async(api_category, api_method, api_params, tokenText) => {
+    url_str = site_settings[base_url]+'/'+ api_category + '/'
+      + site_settings[user_id] 
       + '/' + site_settings[repo_name] + '/' + api_method + '/' + api_params;
     console.debug('url_str = ', url_str);
     var headers_obj = {'Accept': 'application/vnd.github.v3+json'};
@@ -29,13 +22,13 @@ function GitHubBroker(){
       console.debug('I am not using authorization for API calls.');
     }
     var response = await fetch(url_str, 
-                           {method : http_verb, 
-                            headers: headers_obj,
-                            body: post_data
+                           {method : 'GET', 
+                            headers: headers_obj
                            });
     var response_json = await response.json();
     return response_json;
   }
+
   const name = 'name';
   const content = 'content';
   const html_url = 'html_url';
@@ -48,12 +41,12 @@ function GitHubBroker(){
    * @param postDiv: DOM object that we attach blog posts to
    */
   GitHubBroker.prototype.get_posts = async(postDiv, tokenText) => {
-     github_api_call('repos', 'contents', 'posts', tokenText)
+     github_get_request('repos', 'contents', 'posts', tokenText)
        .then((blog_posts) => {
          //we have the list of blog posts
          //TODO: recursively traverse contents
          blog_posts.map((blog_post) => {
-           github_api_call('repos', 'contents', 'posts'+'/'+blog_post[name], tokenText)
+           github_get_request('repos', 'contents', 'posts'+'/'+blog_post[name], tokenText)
              .then((blog_post) => {
                //we have the individual posts
                console.debug('blog_post ', blog_post);
@@ -103,7 +96,7 @@ function GitHubBroker(){
   getCurrentCommitSHA = async(oauthToken, getCurrentTreeSHA) => {
     console.debug('getting currrent commit sha');
     console.debug('oauth token = ', oauthToken);
-    var ref = await github_api_call('repos', 'git/refs',
+    var ref = await github_get_request('repos', 'git/refs',
       'heads/'+site_settings[branch_name], oauthToken);
     return ref.object.sha;
     } 
@@ -119,7 +112,7 @@ function GitHubBroker(){
     getCurrentTreeSHA = async(oauthToken, sha) =>{
       console.debug("getCurrentTreeSHA::oauthToken = ", oauthToken);
       console.debug("getCurrentTreeSHA::sha= ", sha);
-      var commit = await github_api_call('repos', 'git/commits',
+      var commit = await github_get_request('repos', 'git/commits',
         sha, oauthToken);
       console.debug('getCurrentTreeSha:: tree sha = ', commit.tree.sha);
       return commit.tree.sha;
@@ -136,7 +129,7 @@ function GitHubBroker(){
   * @param sha - should be SHA value of current tree
   */
    createFiles = async(post_text, oauthToken) => {
-     var blob = await github_api_call('repos', 'git/blobs', "",
+     var blob = await github_get_request('repos', 'git/blobs', "",
        oauthToken, 'POST', 
        JSON.stringify({
          content: {content: btoa(post_text), 
