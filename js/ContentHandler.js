@@ -24,7 +24,8 @@ ContentHandler.prototype.fetchPosts = (blogPostsDiv) => {
   self.gitHubBroker.get_posts(blogPostsDiv, self.oauthToken);
  }
 
-ContentHandler.prototype.createPost = (post_text) => {
-  console.debug('posting text: ', post_text);
-  self.gitHubBroker.save_post(post_text, self.oauthToken);
+ContentHandler.prototype.createPost = (post_text, oauthToken) => {
+  console.debug('ContentHandler::createPost posting text: ', post_text);
+  console.debug('ContentHandler::createPost oauthToken: ', oauthToken);
+  self.gitHubBroker.save_post(post_text, oauthToken);
 }
