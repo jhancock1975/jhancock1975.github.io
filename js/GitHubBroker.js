@@ -137,6 +137,7 @@ function GitHubBroker(){
                if (should_add){
                 var newPostDiv = document.createElement('div');
                 newPostDiv.innerHTML = atob(blog_post[content]);
+                newPostDiv.setAttribute('class', 'blogpost');
                 postDiv.appendChild(newPostDiv);
                } else {
                  console.debug('we already have a div that shows ', blog_url);
