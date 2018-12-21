@@ -103,6 +103,49 @@ function GitHubBroker(){
     var response_json = await response.json();
     return response_json;
   }
+
+  const body = 'body';
+  const contents = 'contents';
+  /**
+   * Convenience method for making API call.  
+   * 
+   * @author: jhancock1975
+   * @param api_category: github API category name, example: repos
+   * @param api_method: github API endpoint method, example: contents
+   * @param api_params: github method parameters, example: posts (the name of
+   * some directory)
+   */
+
+  github_api_call = async(path, verb, oauthToken, request_data) =>{
+    let dbg_tag = 'GitHubBroker::github_api_call:'; 
+    console.debug(dbg_tag, ' request_data = ', request_data);
+
+    let url_str = site_settings[base_url]+'/'+path;
+    console.debug(dbg_tag, ' url_str = ', url_str);
+
+    let headers_obj = {'Accept': 'application/vnd.github.v3+json'};
+
+    if ((tokenText !== undefined) && (tokenText !== "")){
+      console.debug(dbg_tag, 'setting oauth token value ', oauthToken);
+      headers_obj['Authorization'] = 'token ' + oauthToken;
+    } else {
+      console.debug('The token_val is blank or undefined.');
+      console.debug('I am not using authorization for API calls.');
+    }
+
+    let fetch_obj = {method: verb, headers: headers_obj};
+
+    if ((request_data !== undefined) && (request_data !== '')){
+      fetch_obj[body] = request_data;
+    }
+
+    var response = await fetch(url_str, fetch_obj);
+    var response_json = await response.json();
+    console.debug(dbg_tag, ' response_json ', response_json);
+    return response_json;
+  }
+
+
   const name = 'name';
   const content = 'content';
   const html_url = 'html_url';
@@ -115,12 +158,19 @@ function GitHubBroker(){
    * @param postDiv: DOM object that we attach blog posts to
    */
   GitHubBroker.prototype.get_posts = async(postDiv, tokenText) => {
-     github_get_request('repos', 'contents', 'posts', tokenText)
+     let dbg_tag = 'GitHubBroker::get_posts:';
+     console.debug(dbg_tag, ' tokenText ', tokenText);
+     let path='repos' 
+       + '/' + site_settings[user_id]
+       + '/' + site_settings[repo_name]
+       + '/' + contents
+       + '/' + 'posts'; 
+     github_api_call(path, 'GET', tokenText)
        .then((blog_posts) => {
          //we have the list of blog posts
          //TODO: recursively traverse contents
          blog_posts.map((blog_post) => {
-           github_get_request('repos', 'contents', 'posts'+'/'+blog_post[name], tokenText)
+           github_api_call(path + '/' + blog_post[name], 'GET', tokenText)
              .then((blog_post) => {
                //we have the individual posts
                console.debug('blog_post ', blog_post);

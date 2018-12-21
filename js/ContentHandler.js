@@ -10,18 +10,15 @@ function ContentHandler(){
   this.gitHubBroker = new GitHubBroker();
   //save reference to this for use in privileged methods
   self = this;
-  self.oauthToken = '';
-  self.setOauthToken = (tokenValue) => {
-    self.oauthToken = tokenValue; 
- }
 }
 /**
  * fetches post using OAUTH token for authentication
  *
  * @param tokenText: DOM text input element, mean to hold an OAUTH token
  */
-ContentHandler.prototype.fetchPosts = (blogPostsDiv) => {
-  self.gitHubBroker.get_posts(blogPostsDiv, self.oauthToken);
+ContentHandler.prototype.fetchPosts = (blogPostsDiv, oauthToken) => {
+  console.debug('ContentHandler::fetchPosts: oauthToken = ', oauthToken);
+  self.gitHubBroker.get_posts(blogPostsDiv, oauthToken);
  }
 
 ContentHandler.prototype.createPost = (post_text, oauthToken) => {
