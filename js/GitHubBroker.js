@@ -40,58 +40,51 @@ function GitHubBroker(){
     return response_json;
   }
 
+  /**
+     * This function gets blog posts from a github repository
+     * it expects there to be a directory called posts in the
+     * top level of the repository, and invokes content handler's
+     * callback to process post contents.
+     * Currently this method only fetches files with a file name that
+     * ends with .json.
+     *
+     * @param tokenText: user supplied oauth token, user must request
+     *  token from Github
+     *
+     * @param contentHandlerCallback: callback function for processing file
+     * contents
+     */
+    GitHubBroker.prototype.get_posts = async(tokenText,
+      contentHandlerCallback) => {
+       let dbg_tag = 'GitHubBroker::get_posts:';
+       console.debug(dbg_tag, ' tokenText ', tokenText);
+       let path='repos' 
+         + '/' + site_settings[user_id]
+         + '/' + site_settings[repo_name]
+         + '/' + contents
+         + '/' + 'posts'; 
+       github_api_call(path, 'GET', tokenText)
+         .then((blog_posts) => {
+           //we have the list of blog posts
+           //TODO: recursively traverse contents
+           blog_posts.map((blog_post) => {
+             if (blog_post[name].endsWith('.json')){
+               github_api_call(path + '/' + blog_post[name], 'GET', tokenText)
+                 .then((blog_post) => {
+                   //we have the individual posts
+                   console.debug(dbg_tag, 'blog_post ', blog_post);
+                   contentHandlerCallback(atob(blog_post[content]));
+              })
+           }
+           })
+       })
+  }
 
   const name = 'name';
   const content = 'content';
   const html_url = 'html_url';
-  /**
-   * This function gets blog posts from a github repository
-   * it expects there to be a directory called posts in the
-   * top level of the repository, and attaches the posts
-   * to child divs of postDiv
-   *
-   * @param postDiv: DOM object that we attach blog posts to
-   */
-  GitHubBroker.prototype.get_posts = async(postDiv, tokenText) => {
-     let dbg_tag = 'GitHubBroker::get_posts:';
-     console.debug(dbg_tag, ' tokenText ', tokenText);
-     let path='repos' 
-       + '/' + site_settings[user_id]
-       + '/' + site_settings[repo_name]
-       + '/' + contents
-       + '/' + 'posts'; 
-     github_api_call(path, 'GET', tokenText)
-       .then((blog_posts) => {
-         //we have the list of blog posts
-         //TODO: recursively traverse contents
-         blog_posts.map((blog_post) => {
-           github_api_call(path + '/' + blog_post[name], 'GET', tokenText)
-             .then((blog_post) => {
-               //we have the individual posts
-               console.debug('blog_post ', blog_post);
-               blog_url = blog_post[html_url];
-               var should_add = false;
-               if (! postDiv.url_list){
-                 postDiv.url_list = [blog_url];
-                 should_add = true;
-               }
-               if (!postDiv.url_list.includes(blog_url)){
-                 postDiv.url_list.push(blog_url);
-                 should_add = true;
-               }
-               if (should_add){
-                var newPostDiv = document.createElement('div');
-                newPostDiv.innerHTML = atob(blog_post[content]);
-                newPostDiv.setAttribute('class', 'blogpost');
-                postDiv.appendChild(newPostDiv);
-               } else {
-                 console.debug('we already have a div that shows ', blog_url);
-               }
-           })
-         })
-     })
-  }
-
+  const sha = 'sha';
+  const commit = 'commit';
   GitHubBroker.prototype.save_post = async(post_text, oauthToken) => {
     console.debug("saving post text ", post_text);
     console.debug("token = ", oauthToken);
@@ -170,11 +163,24 @@ function GitHubBroker(){
         +  '/git/blobs',
        'POST',
        oauthToken, 
-       JSON.stringify({content: btoa(post_text), 
+       JSON.stringify({content: btoa(jsonify(post_text)), 
          encoding: 'base64'}));
       console.debug('blob = ', blob);
       return blob.sha;
    }
+
+  /**
+   * creates json representation of post
+   *
+   * @param post_text: post text
+   */
+   jsonify = (post_text) => {
+     let d = new Date();
+     result = {};
+     result.post_change_time = d.getTime();
+     result.post_content = post_text;
+     return JSON.stringify(result);
+    }
 
   /**
    * creates a tree object from the blob
@@ -186,7 +192,7 @@ function GitHubBroker(){
    */
   createTree = async(tree_sha, blob_sha, oauthToken) => {
     let blob_obj = [{sha: blob_sha, 
-      path: 'posts/'+new Date().getTime() + ".html",
+      path: 'posts/' + guid() + '_' + new Date().getTime() + ".json",
       mode: '100644',
       type: 'blob'}];
    let to_push = {tree: blob_obj, base_tree: tree_sha}; 
@@ -200,6 +206,24 @@ function GitHubBroker(){
         JSON.stringify(to_push));
    console.debug(new_commit_tree_obj);
    return new_commit_tree_obj.sha; 
+  }
+  /**
+   * generates pseduo-guid to help overcome question of simultaneous posts
+   * this code is copied from
+   * https://stackoverflow.com/posts/105074/revisions
+   * StackOverflow.com user Andy Stehno user response, October 16, 2016.
+   * accessed December 21, 2018.
+   * 
+   * @return: an unreliable guid, according to StackOverflow posting
+   */
+  guid = () => {
+    s4 = ()=> {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4()
+      + s4();
   }
 
   /**

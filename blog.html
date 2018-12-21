@@ -19,7 +19,7 @@
        the GitHubBroker -->
   <script src='./js/ContentHandler.js'></script>
 </head>
-<body onload='contentHandler = new ContentHandler()'>
+<body onload='contentHandler = new ContentHandler(blog_posts, tokenText.value)'>
 <div id="container">
   <div id="header">
     <h1>jhancock1975 blog</h1>
@@ -50,7 +50,7 @@
       authenticated, and avoid exceeding your API call volume quota.</p>
     <h2>Load blog posts</h2>
     <p><a onclick='contentHandler.fetchPosts(blog_posts, tokenText.value)'
-         >Load blog posts</a></p>
+         >Load blog posts using OAUTH token</a></p>
     <p><input type = 'text' id = 'tokenText' name = 'tokenText' /></p>
     <blockquote>
       <p><strong>Blog Posts</strong><br /> </p> </blockquote>
