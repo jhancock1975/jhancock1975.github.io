@@ -46,7 +46,7 @@
     <h2>Write a blog post</h2>
     <p><input type = 'text' id = 'tokenText' name = 'tokenText' 
           onfocusout = 'contentHandler.setOauthToken(tokenText.value)'/></p>
-    <p><textarea id='post_text' name='post_text' rows='4' cols='50'></textarea></p>
+    <p><textarea id='post_text' name='post_text' rows='20' cols='80'></textarea></p>
     <p><a onclick='contentHandler.createPost(post_text.value, tokenText.value)'
       >Save post</a></p>
   </div>
