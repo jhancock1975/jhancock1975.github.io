@@ -50,11 +50,11 @@ Subreddit</a></li>
       Enter an OAUTH token value in the text box to make the API calls 
       authenticated, and avoid exceeding your API call volume quota.</p>
     <h2>Write a blog post</h2>
-    <p><input type = 'text' id = 'tokenText' name = 'tokenText' 
-          onfocusout = 'contentHandler.setOauthToken(tokenText.value)'/></p>
+    <p><input type = 'text' id = 'tokenText' name = 'tokenText' /></p>
     <p><textarea id='post_text' name='post_text' rows='20' cols='80'></textarea></p>
-    <p><a onclick='contentHandler.createPost(post_text.value, tokenText.value)'
+    <p><a onclick='contentHandler.createPost(post_text, tokenText.value, msgArea)'
       >Save post</a></p>
+    <div id='msgArea'></div>
   </div>
   <!--//end #centerColumn//-->
   <div id="footer"> <a target="_blank" href="http://validator.w3.org/"

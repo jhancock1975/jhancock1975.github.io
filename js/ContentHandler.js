@@ -6,12 +6,40 @@
  * for object encapsulation
  * TODO - verify these encapsulation techniques actually work
  */
-function ContentHandler(blogPostsDiv){
+function ContentHandler(){
   this.gitHubBroker = new GitHubBroker();
   //save reference to this for use in privileged methods
   self = this;
   self.postObjArr = [];
   //self.fetchPosts(blogPostsDiv);
+  var timerHandle;
+ /**
+   * callback function for actions after ContentHandler
+   * submits a blog post
+   * 
+   * @param blogPostInfo: information about blog post
+   */
+  blogPostSubmitted = (msgArea) => {
+    let dbg_tag = 'ContentHandler::blogPostSubmitted:';
+    console.debug(dbg_tag, ' msgArea ', msgArea);
+    let blogPostedMsg = document.createElement('p');
+    blogPostedMsg.innerText = 'Blog entry posted at ' + Date();
+    msgArea.appendChild(blogPostedMsg);
+    timerHandle = setTimeout(clearBlogPostedMsg, 3000);
+    self.msgArea = msgArea;
+    console.debug(dbg_tag, ' timerHandle ', timerHandle);
+  }
+  
+  /**
+   * called to clear message displayed after blog posted
+   *
+   */
+  clearBlogPostedMsg = () => {
+    let dbg_tag = 'ContentHandler::clearBlogPostedMsg:';
+    console.debug(dbg_tag, ' msgArea ', self.msgArea);
+    msgArea.removeChild(msgArea.lastElementChild);
+    }
+
 }
 /**
  * fetches post using OAUTH token for authentication
@@ -24,7 +52,7 @@ ContentHandler.prototype.fetchPosts =  (blogPostsDiv, oauthToken) => {
   console.debug(dbg_tag, ' oauthToken = ', oauthToken);
   self.blogPostsDiv = blogPostsDiv;
   self.gitHubBroker.get_posts(oauthToken, self.getPostsCallback);
-}
+  }
 
 const post_content = 'post_content';
 const post_change_time = 'post_change_time';
@@ -39,7 +67,7 @@ const max_posts_display = 5;
  * containing illegal line breaks that we remove before parsing the JSON.
  */
 ContentHandler.prototype.getPostsCallback = (postJson) => {
-  dbg_tag = 'ContentHandler::getPostsCallback:';
+  let dbg_tag = 'ContentHandler::getPostsCallback:';
   console.debug(dbg_tag, ' postJson ', postJson);  
   postObj = JSON.parse(postJson.replace(/(\r\n\t|\n|\r\t)/gm,""));
   if (self.postObjArr.length <= max_posts){
@@ -69,8 +97,13 @@ ContentHandler.prototype.getPostsCallback = (postJson) => {
   }
 }
 
-ContentHandler.prototype.createPost = (post_text, oauthToken) => {
-  console.debug('ContentHandler::createPost posting text: ', post_text);
+ContentHandler.prototype.createPost = (post_text, oauthToken, msgAreaDiv) => {
+  console.debug('ContentHandler::createPost posting text: ', post_text.value);
   console.debug('ContentHandler::createPost oauthToken: ', oauthToken);
-  self.gitHubBroker.save_post(post_text, oauthToken);
-}
+  self.gitHubBroker.save_post(post_text.value, oauthToken)
+    .then((blogPostResult) => {
+      post_text.value='';
+      blogPostSubmitted(msgAreaDiv);
+    });
+  }
+
