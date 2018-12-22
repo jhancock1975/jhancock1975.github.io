@@ -1,0 +1,1 @@
+{"post_change_time":1545498037581,"post_content":"<p>Well, the xgboost tutorial is ok but there were a lot of things I could not get to work, so I want to study those in detail from another source.</p>\n\n<p>Especially the function for plotting a decision tree- </p>\n<pre>xgb.plot.multi.trees</pre>"}
