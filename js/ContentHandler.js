@@ -27,11 +27,9 @@ function ContentHandler(){
    *
    * @param tokenText: DOM text input element, mean to hold an OAUTH token
    */
-  ContentHandler.prototype.fetchPosts = async (blogPostsDiv, oauthToken) => {
+  ContentHandler.prototype.fetchPosts = async (blogPostsDiv) => {
     let dbg_tag = 'ContentHandler::fetchPosts:';
-    console.debug(dbg_tag, ' oauthToken = ', oauthToken);
-    this.blogPostsDiv = blogPostsDiv;
-    postObjArr = await gitHubBroker.get_posts_from_file(oauthToken);
+    postObjArr = await gitHubBroker.get_posts_from_file();
     console.debug(dbg_tag, ' postObjArr ', postObjArr);
     postObjArr.sort( (a,b) => {
       keyA = a.post_change_time;
@@ -40,8 +38,8 @@ function ContentHandler(){
       if (keyA > keyB) return -1;
       return 0;
       });
-    while(this.blogPostsDiv.firstChild){
-      this.blogPostsDiv.removeChild(this.blogPostsDiv.firstChild);
+    while(blogPostsDiv.firstChild){
+      blogPostsDiv.removeChild(blogPostsDiv.firstChild);
     }
     for (i=0; (i < postObjArr.length && i < max_posts_display); i++){
       console.debug(dbg_tag, ' postObjArr '+i, postObjArr[i]);
@@ -51,7 +49,7 @@ function ContentHandler(){
       postDiv.innerHTML = '<p>' + postDate + '</p>';
       postDiv.innerHTML += postObjArr[i][post_content];
       postDiv.setAttribute('class', 'blogpost');
-      this.blogPostsDiv.appendChild(postDiv);
+      blogPostsDiv.appendChild(postDiv);
     }
   }
   
