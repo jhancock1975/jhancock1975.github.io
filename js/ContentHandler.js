@@ -18,10 +18,10 @@ function ContentHandler(){
   //save posts to reduce number of times we access index.json
   //TODO - think about whether or not this is necessary
   let postObjArr = [];
- 
-  //for saving the timer ID that setTimeout returns. 
-  var timerHandle;
 
+  //for reference to message area for message update timeout function
+  let m_msgArea;
+ 
   /**
    * fetches post using OAUTH token for authentication
    *
@@ -82,9 +82,8 @@ function ContentHandler(){
     let dbg_tag = 'ContentHandler::blogPostSubmitted:';
     console.debug(dbg_tag, ' msgArea ', msgArea);
     msgArea.firstChild.innerText = 'Blog entry posted at ' + Date();
-    timerHandle = setTimeout(clearBlogPostedMsg, 3000);
-    this.msgArea = msgArea;
-    console.debug(dbg_tag, ' timerHandle ', timerHandle);
+    setTimeout(clearBlogPostedMsg, 3000);
+    m_msgArea = msgArea;
   }
   
   /**
@@ -92,9 +91,7 @@ function ContentHandler(){
    *
    */
   clearBlogPostedMsg = () => {
-    let dbg_tag = 'ContentHandler::clearBlogPostedMsg:';
-    console.debug(dbg_tag, ' msgArea ', this.msgArea);
-    msgArea.removeChild(msgArea.lastElementChild);
+    m_msgArea.removeChild(msgArea.lastElementChild);
     }
 
 
