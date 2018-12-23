@@ -9,10 +9,9 @@
 function ContentHandler(){
   let gitHubBroker = new GitHubBroker();
 
-  this.getGithubBroker = () => { return gitHubBroker;}
-
-  //save reference to this for use in privileged methods
-  this.postObjArr = [];
+  //save posts to reduce number of times we access index.json
+  //TODO - think about whether or not this is necessary
+  let postObjArr = [];
  
   //for saving the timer ID that setTimeout returns. 
   var timerHandle;
@@ -67,9 +66,9 @@ function ContentHandler(){
     let dbg_tag = 'ContentHandler::fetchPosts:';
     console.debug(dbg_tag, ' oauthToken = ', oauthToken);
     this.blogPostsDiv = blogPostsDiv;
-    this.postObjArr = await gitHubBroker.get_posts_from_file(oauthToken);
-    console.debug(dbg_tag, ' this.postObjArr ', this.postObjArr);
-    this.postObjArr.sort( (a,b) => {
+    postObjArr = await gitHubBroker.get_posts_from_file(oauthToken);
+    console.debug(dbg_tag, ' postObjArr ', postObjArr);
+    postObjArr.sort( (a,b) => {
       keyA = a.post_change_time;
       keyB = b.post_change_time;
       if (keyA < keyB) return 1;
@@ -79,13 +78,13 @@ function ContentHandler(){
     while(this.blogPostsDiv.firstChild){
       this.blogPostsDiv.removeChild(this.blogPostsDiv.firstChild);
     }
-    for (i=0; (i < this.postObjArr.length && i < max_posts_display); i++){
-      console.debug(dbg_tag, ' postObjArr '+i, this.postObjArr[i]);
+    for (i=0; (i < postObjArr.length && i < max_posts_display); i++){
+      console.debug(dbg_tag, ' postObjArr '+i, postObjArr[i]);
       postDiv = document.createElement('div');
       postDate = new Date(1970,0,1);
-      postDate.setTime(this.postObjArr[i][post_change_time]);
+      postDate.setTime(postObjArr[i][post_change_time]);
       postDiv.innerHTML = '<p>' + postDate + '</p>';
-      postDiv.innerHTML += this.postObjArr[i][post_content];
+      postDiv.innerHTML += postObjArr[i][post_content];
       postDiv.setAttribute('class', 'blogpost');
       this.blogPostsDiv.appendChild(postDiv);
     }
@@ -107,12 +106,12 @@ function ContentHandler(){
     let dbg_tag = 'ContentHandler::getPostsCallback:';
     console.debug(dbg_tag, ' postJson ', postJson);  
     postObj = JSON.parse(postJson.replace(/(\r\n\t|\n|\r\t)/gm,""));
-    if (this.postObjArr.length <= max_posts){
-      this.postObjArr.push(postObj);
+    if (postObjArr.length <= max_posts){
+      postObjArr.push(postObj);
     } else {
       console.debug("maximum number of posts exceeded.");
     }
-    this.postObjArr.sort( (a,b) => {
+    postObjArr.sort( (a,b) => {
       keyA = a.post_change_time;
       keyB = b.post_change_time;
       if (keyA < keyB) return 1;
@@ -122,13 +121,13 @@ function ContentHandler(){
     while(this.blogPostsDiv.firstChild){
       this.blogPostsDiv.removeChild(this.blogPostsDiv.firstChild);
     }
-    for (i=0; (i < this.postObjArr.length && i < max_posts_display); i++){
-      console.log(dbg_tag, ' postObjArr '+i, this.postObjArr[i]);
+    for (i=0; (i < postObjArr.length && i < max_posts_display); i++){
+      console.log(dbg_tag, ' postObjArr '+i, postObjArr[i]);
       postDiv = document.createElement('div');
       postDate = new Date(1970,0,1);
-      postDate.setTime(this.postObjArr[i][post_change_time]);
+      postDate.setTime(postObjArr[i][post_change_time]);
       postDiv.innerHTML = '<p>' + postDate + '</p>';
-      postDiv.innerHTML += this.postObjArr[i][post_content];
+      postDiv.innerHTML += postObjArr[i][post_content];
       postDiv.setAttribute('class', 'blogpost');
       this.blogPostsDiv.appendChild(postDiv);
     }
@@ -146,11 +145,11 @@ function ContentHandler(){
   ContentHandler.prototype.createPost = async (post_text, oauthToken, msgAreaDiv) => {
     console.debug('ContentHandler::createPost posting text: ', post_text.value);
     console.debug('ContentHandler::createPost oauthToken: ', oauthToken);
-    if ((this.postObjArr === undefined) || (this.postObjArr.length < 1)){
-      this.postObjArr = await gitHubBroker.get_posts_from_file(oauthToken);
+    if ((postObjArr === undefined) || (postObjArr.length < 1)){
+      postObjArr = await gitHubBroker.get_posts_from_file(oauthToken);
     }
-    this.postObjArr.push(createPostObj(post_text.value));
-    gitHubBroker.save_post(JSON.stringify(this.postObjArr), oauthToken, 
+    postObjArr.push(createPostObj(post_text.value));
+    gitHubBroker.save_post(JSON.stringify(postObjArr), oauthToken, 
       'index.json')
       .then((blogPostResult) => {
         post_text.value='';
