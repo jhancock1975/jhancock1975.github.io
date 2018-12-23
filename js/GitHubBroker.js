@@ -40,7 +40,7 @@ function GitHubBroker(){
     return response_json;
   }
 
-  /**
+    /**
      * This function gets blog posts from a github repository
      * it expects there to be a directory called posts in the
      * top level of the repository, and invokes content handler's
@@ -69,6 +69,9 @@ function GitHubBroker(){
            //TODO: recursively traverse contents
            blog_posts.map((blog_post) => {
              if (blog_post[name].endsWith('.json')){
+               console.debug(dbg_tag, ' git_file_contents ',
+                 git_file_contents(path  + '/' + blog_post[name],
+                  tokenText));
                github_api_call(path + '/' + blog_post[name], 'GET', tokenText)
                  .then((blog_post) => {
                    //we have the individual posts
@@ -80,14 +83,94 @@ function GitHubBroker(){
        })
   }
 
+ /**
+   * This function gets blog posts from a github repository
+   * it expects there to be a directory called posts in the
+   * top level of the repository, and invokes content handler's
+   * callback to process post contents.
+   * Currently this method only fetches files with a file name that
+   * ends with .json.
+   *
+   * @param tokenText: user supplied oauth token, user must request
+   *  token from Github
+   *
+   * @param contentHandlerCallback: callback function for processing file
+   * contents
+   */
+  GitHubBroker.prototype.get_posts_from_file = async(tokenText) => {
+    let dbg_tag = 'GitHubBroker::get_posts_from_file';
+    let fetch_obj = {method: 'GET'};
+    // we are using the repository name for the base url because
+    // the github.io free web hosting they give uses the repository
+    // name as the host name
+    let blog_posts_url = 'https://' + site_settings[repo_name]
+      +'/posts/index.json';
+    var response = await fetch(blog_posts_url , fetch_obj);
+    var blog_posts_arr = await response.json();
+    console.debug(dbg_tag, ' blog_posts_arr ', blog_posts_arr);
+    return blog_posts_arr;
+  }
+
+   //temporary list to hold all posts for
+   //writing to index.json
+   //this list should go away in the near future
+   var file_contents_arr = [];
+
+   /**
+    * retrieves file contents from github using path
+    * 
+    * @param  file_path - path to file relative to repository root - 
+    *  it is not necessary to give the repository or repository owner
+    *  name
+    *
+    * @param tokenText: user supplied oauth token, user must request
+    *  token from Github
+    *
+    *  @return  base 64 decoded equivalent of file contents
+    */
+  git_file_contents = (file_path, tokenText) => {
+    let dbg_tag = 'GitHubBroker::git_file_contents:';
+    console.log(dbg_tag, ' file_path ', file_path, 'token text ', tokenText);
+    github_api_call(file_path, 'GET', tokenText)
+      .then((blog_post) => {
+      //we have the individual posts
+      console.debug(dbg_tag, 'blog_post ', blog_post);
+
+      //this is temporary code to store all posts in a file
+      //index.json
+      file_contents_arr.push (
+         JSON.parse(
+          atob(blog_post[content])
+           .replace(/(\r\n\t|\n|\r\t)/gm,"")));
+
+      console.debug(dbg_tag, ' result ', result); 
+      return result;
+    });
+  }
+
+  /**
+   * this is a temporary method we are going to call from the console
+   * to create index.json
+   */
+  GitHubBroker.prototype.create_index_json = (oauthToken) => { 
+     file_contents_str = JSON.stringify(file_contents_arr)
+     GitHubBroker.prototype.save_post(file_contents_str, oauthToken, 'index.json');
+  }
+ 
   const name = 'name';
   const content = 'content';
   const html_url = 'html_url';
   const sha = 'sha';
   const commit = 'commit';
-  GitHubBroker.prototype.save_post = async(post_text, oauthToken) => {
-    console.debug("saving post text ", post_text);
-    console.debug("token = ", oauthToken);
+  GitHubBroker.prototype.save_post = async(all_posts_json, oauthToken,
+    file_name) => {
+    let dbg_tag = "GitHubBroker::save_post:";
+    console.debug(dbg_tag, "saving post text ", all_posts_json);
+    console.debug(dbg_tag, "token = ", oauthToken);
+    
+    //use default file name of guid plus the date if none supplied
+    file_name = file_name || guid() + '_' + new Date().getTime() + ".json";
+    console.debug(dbg_tag, ' file_name ', file_name);
 
     //take the code from
     // https://gist.github.com/iktash/31ccc1d8582bd9dcb15ee468c7326f2d    
@@ -96,10 +179,10 @@ function GitHubBroker(){
 
     var tree_sha = await getCurrentTreeSHA(oauthToken, commit_sha);
 
-    var blob_sha = await createBlob(post_text, oauthToken);
+   var blob_sha = await createBlob(all_posts_json, oauthToken);
 
     var new_commit_tree_sha = await createTree(tree_sha, blob_sha, oauthToken,
-      post_text);
+      file_name);
 
     var new_commit_sha = await createCommit(commit_sha, new_commit_tree_sha, 
       oauthToken);
@@ -163,24 +246,11 @@ function GitHubBroker(){
         +  '/git/blobs',
        'POST',
        oauthToken, 
-       JSON.stringify({content: btoa(jsonify(post_text)), 
+       JSON.stringify({content: btoa(post_text), 
          encoding: 'base64'}));
       console.debug('blob = ', blob);
       return blob.sha;
    }
-
-  /**
-   * creates json representation of post
-   *
-   * @param post_text: post text
-   */
-   jsonify = (post_text) => {
-     let d = new Date();
-     result = {};
-     result.post_change_time = d.getTime();
-     result.post_content = post_text;
-     return JSON.stringify(result);
-    }
 
   /**
    * creates a tree object from the blob
@@ -190,9 +260,11 @@ function GitHubBroker(){
    * @param oauthToken: user supplied oauth token, user must request
    *   token from Github
    */
-  createTree = async(tree_sha, blob_sha, oauthToken) => {
+  createTree = async(tree_sha, blob_sha, oauthToken, file_name) => {
+    let dbg_tag = 'GitHubBroker::createTree:';
+    console.debug(dbg_tag, ' file_name ', file_name);
     let blob_obj = [{sha: blob_sha, 
-      path: 'posts/' + guid() + '_' + new Date().getTime() + ".json",
+      path: 'posts/' + file_name,
       mode: '100644',
       type: 'blob'}];
    let to_push = {tree: blob_obj, base_tree: tree_sha}; 
@@ -204,7 +276,7 @@ function GitHubBroker(){
         'POST',
         oauthToken, 
         JSON.stringify(to_push));
-   console.debug(new_commit_tree_obj);
+   console.debug(dbg_tag, ' new_commit_tree_obj ', new_commit_tree_obj);
    return new_commit_tree_obj.sha; 
   }
   /**
