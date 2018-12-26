@@ -1,7 +1,27 @@
+%%
+ % this file is a diagram of the 
+ % relationships between the major
+ % components of jhancock1975.github.io
+ % which is a blog site that
+ % uses a Github repository for its
+ % persistence layer.
+ %%
 \documentclass[border=10pt]{standalone}
 \usepackage{tikz}
 \usetikzlibrary{arrows, automata, backgrounds, calendar, chains,
 matrix, mindmap, patterns, petri, shadows, shapes.geometric,
 shapes.misc, spy, trees}
 \begin{document}
+\tikzstyle{javascript}
+\tikzstyle{webResource}
+\begin{tikzpicture}
+  \node [javascript ](contentHandler){Content Handler};
+  \node [javascript ] (githubBroker){Github Broker};
+  \node [javascript ] (contentBroker) {ContentBroker);
+  \node[](githubPages) {Github Pages (userid.github.io)};
+  \node[below = of githubPages](github){Github};
+  \node[above right = of github](githubRepo) {Github repository also named
+    userid.github.io};
+  \draw[-] (github) -- (githubPages);
+\end{tikzpicture}
 \end{document}

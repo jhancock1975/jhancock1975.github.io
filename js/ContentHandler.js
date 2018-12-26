@@ -1,7 +1,7 @@
 /**
  * uses functionality defined in site_functions.js
  *
- * 
+ *
  * we rely on code at https://crockford.com/javascript/private.html
  * for object encapsulation
  * TODO - verify these encapsulation techniques actually work
@@ -12,7 +12,7 @@ function ContentHandler(){
   const post_change_time = 'post_change_time';
   const max_posts = 10000;
   const max_posts_display = 5;
- 
+
   let gitHubBroker = new GitHubBroker();
 
   //save posts to reduce number of times we access index.json
@@ -21,7 +21,7 @@ function ContentHandler(){
 
   //for reference to message area for message update timeout function
   let m_msgArea;
- 
+
   /**
    * fetches post using OAUTH token for authentication
    *
@@ -52,7 +52,7 @@ function ContentHandler(){
       blogPostsDiv.appendChild(postDiv);
     }
   }
-  
+
  ContentHandler.prototype.createPost = async (post_text, oauthToken, msgAreaDiv) => {
     console.debug('ContentHandler::createPost posting text: ', post_text.value);
     console.debug('ContentHandler::createPost oauthToken: ', oauthToken);
@@ -64,7 +64,7 @@ function ContentHandler(){
       postObjArr = await gitHubBroker.get_posts_from_file(oauthToken);
     }
     postObjArr.push(createPostObj(post_text.value));
-    gitHubBroker.save_post(JSON.stringify(postObjArr), oauthToken, 
+    gitHubBroker.save_post(JSON.stringify(postObjArr), oauthToken,
       'index.json')
       .then((blogPostResult) => {
         post_text.value='';
@@ -75,7 +75,7 @@ function ContentHandler(){
  /**
    * callback function for actions after ContentHandler
    * submits a blog post
-   * 
+   *
    * @param blogPostInfo: information about blog post
    */
   blogPostSubmitted = (msgArea) => {
@@ -85,7 +85,7 @@ function ContentHandler(){
     setTimeout(clearBlogPostedMsg, 3000);
     m_msgArea = msgArea;
   }
-  
+
   /**
    * called to clear message displayed after blog posted
    *
@@ -107,5 +107,15 @@ function ContentHandler(){
      result.post_content = post_text;
      return result
   }
-
+  /**
+   * called to populate page common areas
+   *
+   * @param body: body DOM element, that we attach
+   * elements to
+   */
+   ContentHandler.prototype.populateCommonArea(body){
+     let dbg_tag = "ContentHandler::populateCommonArea:";
+     console.debug(dbg_tag, ' body ', body);
+     links_div = document.createElement('div')
+   }
  }

@@ -12,16 +12,17 @@ content="kr4xXUvaWrfAAl85Z0mnM92dJMLTmYY46BMcjH2Z7cY" />
        This file contains constants that site_functions.js uses.
    -->
   <script src='js/site_settings.js'></script>
-  
+
   <!-- this script has the GitHubBroker object for storing & retrieving
        blog post data in GitHub -->
   <script src='./js/GitHubBroker.js'></script>
-  
+
   <!-- this script has the ContentHandler object that is a client of
        the GitHubBroker -->
   <script src='./js/ContentHandler.js'></script>
 </head>
 <body onload='contentHandler = new ContentHandler();
+    contentHandler.populateCommonAreas(body)
     contentHandler.fetchPosts(blog_posts);'>
 <div id="container">
   <div id="header">
