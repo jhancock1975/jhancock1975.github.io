@@ -14,6 +14,7 @@ function ContentHandler(){
   const max_posts_display = 5;
 
   let gitHubBroker = new GitHubBroker();
+  let contentBroker = new ContentBroker();
 
   //save posts to reduce number of times we access index.json
   //TODO - think about whether or not this is necessary
@@ -113,9 +114,17 @@ function ContentHandler(){
    * @param body: body DOM element, that we attach
    * elements to
    */
-   ContentHandler.prototype.populateCommonArea(body){
+   ContentHandler.prototype.populateCommonArea = (body) =>{
      let dbg_tag = "ContentHandler::populateCommonArea:";
      console.debug(dbg_tag, ' body ', body);
-     links_div = document.createElement('div')
+     fetch(site_settings[base_url]+'html/leftColumn.html',
+       {method: 'GET'}).then(resp => resp.text()).then(text => {
+         leftColumnContentDiv = document.createElement('div');
+         leftColumnContentDiv.innerHTML = text;
+         document.getElementById('leftColumn').firstChild
+          =leftColumnContentDiv;
+       });
+     links_div = document.createElement('div');
+
    }
  }
