@@ -140,7 +140,7 @@ function ContentHandler(){
          contentDiv.innerHTML = text;
          parentDiv.appendChild(contentDiv);
          console.debug(dbg_tag, 'parentDiv.firstElementChild',
-         parentDiv.firstElementChild)
+           parentDiv.firstElementChild)
        });
    }
  }
