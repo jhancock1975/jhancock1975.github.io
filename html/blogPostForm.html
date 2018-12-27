@@ -1,0 +1,10 @@
+<h2>Blog Posts</h2>
+<p>Write a blog post in the text area below. Write your post in HTML.
+  You must enter a Github issued OAUTH token value in the text box below
+   in order to save a post.</p>
+<h2>Write a blog post</h2>
+<p><input type = 'text' id = 'tokenText' name = 'tokenText' /></p>
+<p><textarea id='post_text' name='post_text' rows='20' cols='80'></textarea></p>
+<p><a onclick='contentHandler.createPost(post_text, tokenText.value, msgArea)'
+  >Save post</a></p>
+<div id='msgArea'></div>
