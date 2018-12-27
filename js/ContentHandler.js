@@ -107,24 +107,22 @@ function ContentHandler(){
      result.post_content = post_text;
      return result
   }
-  /**
-   * called to populate page common areas
-   *
-   * @param body: body DOM element, that we attach
-   * elements to
-   */
- ContentHandler.prototype.populateCommonAreas = (leftColumn, header,
-   footer) =>{
-     let dbg_tag = "ContentHandler::populateCommonArea:";
-     console.debug(dbg_tag, ' leftColumn ', leftColumn);
-     populateAreaHelper('leftColumn.html', leftColumn);
-     populateAreaHelper('header.html', header);
-     populateAreaHelper('footer.html', footer);
-   }
 
-   /**
+  /**
+   * loads blog posting form
+   *
+   * @param blogPostDiv: div that we attach blog posting form to
+   */
+  ContentHandler.prototype.loadBlogPostForm = (blogPostDiv)=>{
+    while(blogPostDiv.firstChild){
+      blogPostDiv.removeChild(blogPostDiv.firstChild);
+    }
+    populateAreaHelper('blogPostForm.html', blogPostDiv);
+   } /**
     * this helper function factors out code that we call
-    * to load various parts of the site's page.
+    * to load various parts of the site's page. We only use
+    * this to load the blog post form but we anticipate that
+    * we made need it for more later.
     *
     * @param htmlFragmentName: name of a file in the html/ directory.
     * this directory is in the root of the site
