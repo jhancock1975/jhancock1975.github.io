@@ -116,11 +116,18 @@ function ContentHandler(){
  ContentHandler.prototype.populateCommonAreas = (leftColumn) =>{
      let dbg_tag = "ContentHandler::populateCommonArea:";
      console.debug(dbg_tag, ' leftColumn ', leftColumn);
-     fetch(site_settings[site_url]+'html/leftColumn.html',
+     populateAreaHelper('leftColumn.html', leftColumn);
+   }
+   populateAreaHelper = (htmlFragmentName, parentDiv) => {
+     let dbg_tag = "ContentHandler::populateAreaHelper:";
+     fetch(site_settings[site_url]+'/html/'+htmlFragmentName,
        {method: 'GET'}).then(resp => resp.text()).then(text => {
-         leftColumnContentDiv = document.createElement('div');
-         leftColumnContentDiv.innerHTML = text;
-         leftColumn.firstChild =leftColumnContentDiv;
+         contentDiv = document.createElement('div');
+         console.debug(dbg_tag, ' text ', text)
+         contentDiv.innerHTML = text;
+         parentDiv.appendChild(contentDiv);
+         console.debug(dbg_tag, 'parentDiv.firstElementChild',
+         parentDiv.firstElementChild)
        });
    }
  }
