@@ -13,7 +13,7 @@ margin:20px;
 padding:0;
 height:100%;
 background-color:#ffffff;
-color:#000000;  
+color:#000000;
 text-align:center;
 font-family:Verdana, Arial, Helvetica, sans-serif;
 font-size:16px;
@@ -62,16 +62,33 @@ border-bottom:1px solid #cccccc;
 p.blogpost  {
 margin:.2em;
 }
-#container { 	
+#container {
 margin:0 auto;
 padding:0;
 text-align:left;
-vertical-align: middle;	
+vertical-align: middle;
 background-color:#ffffff;
 border:1px solid #cccccc;
 }
 
+.PostPages {
+  margin: 0 auto;
+  padding: 0.5em;
+}
 
+a.PostPages{
+  padding : 0.5em;
+}
+.PostPagesListContainer {
+  margin: 0 auto;
+  text-align: center;
+}
+.PostPagesList {
+  padding:.5em;
+  background-color:#eeeeee;
+  border-top:1px solid #cccccc;
+  border-bottom:1px solid #cccccc;
+}
 
 #header {
 margin:0;
@@ -134,7 +151,7 @@ text-decoration:underline;
 text-decoration:none;
 }
 
-#centerColumn { 	
+#centerColumn {
 margin:0 0 0 180px;
 padding:0;
 background-color:#ffffff;
@@ -163,16 +180,3 @@ font-size:.6em;
 background-color:#ffffff;
 border-top:1px solid #cccccc;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

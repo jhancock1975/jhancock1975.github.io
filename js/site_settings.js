@@ -9,7 +9,7 @@ const user_id = 'user_id';
 const repo_name = 'repo_name';
 const posts_location = 'posts_location';
 const base_url = 'base_url';
-const branch_name = 'branch_name'
+const branch_name = 'branch_name';
 const site_url = 'site_url';
 const site_settings = {user_id : "jhancock1975",
                  repo_name : "jhancock1975.github.io",

@@ -22,7 +22,7 @@ content="kr4xXUvaWrfAAl85Z0mnM92dJMLTmYY46BMcjH2Z7cY" />
   <script src='./js/ContentHandler.js'></script>
 </head>
 <body onload='contentHandler = new ContentHandler();
-      contentHandler.fetchPosts(blog_posts);'>
+      contentHandler.fetchPosts(blog_posts, post_pages_list);'>
 <div id="container">
   <div id="header">
     <h1>jhancock1975 blog</h1>
@@ -59,9 +59,15 @@ content="kr4xXUvaWrfAAl85Z0mnM92dJMLTmYY46BMcjH2Z7cY" />
         <p><strong>Blog Posts</strong><br /></p>
       </blockquote>
       <div class='blogpost' id='blog_posts' name='blog_posts'></div>
-  </div>
+      <div class='PostPagesListContainer'>
+        <div class='PostPagesList' id='post_pages_list'
+          name='post_pages_list'></div>
+    </div>
+    </div>
+
   <!--//end #centerColumn//-->
   <div id="footer">
+
     <a target="_blank" href="http://validator.w3.org/"
     title="W3C HTML Validation">XHTML</a> | <a target="_blank"
     href="http://jigsaw.w3.org/css-validator/validator-uri.html" title="W4C CSS
