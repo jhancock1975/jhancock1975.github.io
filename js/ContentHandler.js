@@ -148,7 +148,7 @@ createPostPagesLink = (linkText) =>{
     console.debug(dbg_tag + 'oauthToken: ', oauthToken);
     let blogPostedMsg = document.createElement('p');
     blogPostedMsg.innerText = 'Saving blog post ...';
-    msgArea.appendChild(blogPostedMsg);
+    msgAreaDiv.appendChild(blogPostedMsg);
 
     if ((postObjArr === undefined) || (postObjArr.length < 1)){
       postObjArr = await gitHubBroker.get_posts_from_file(oauthToken);
@@ -161,6 +161,44 @@ createPostPagesLink = (linkText) =>{
         blogPostSubmitted(msgAreaDiv);
       });
     };
+/**
+ * displays a list of posts. user may click on a post to
+ * view and edit
+ *
+ * @param blog_posts: div where we display the list
+ */
+ ContentHandler.prototype.listPosts = (blog_posts) => {
+   while(blog_posts.firstChild){
+     blog_posts.removeChild(blog_posts.firstChild);
+   }
+   for (index in postObjArr){
+     let postObjDiv = document.createElement('div');
+     let postObjLink = document.createElement('a');
+     postObjLink.index = index;
+     postObjLink.addEventListener('click', (event) =>{
+       loadPost(blog_posts, event);
+     });
+     let postDate = new Date();
+     postDate.setTime(postObjArr[index].post_change_time);
+     postObjLink.innerText = postDate.toString();
+     postObjDiv.appendChild(postObjLink);
+     blog_posts.appendChild(postObjDiv);
+   }
+ };
+
+ /**
+  * opens a blog post
+  * in the blog post editor
+  * @param blog_posts: div holding blog post editor
+  * @param postObj: blog post object
+  */
+  loadPost = (blog_posts, event) => {
+    console.log("ContentHandler::loadPost:event ", event);
+    while(blog_posts.firstChild){
+      blog_posts.removeChild(blog_posts.firstChild);
+    }
+    this.loadBlogPostForm(blog_posts, event);
+  };
 
  /**
    * callback function for actions after ContentHandler
@@ -181,7 +219,7 @@ createPostPagesLink = (linkText) =>{
    *
    */
   clearBlogPostedMsg = () => {
-    m_msgArea.removeChild(msgArea.lastElementChild);
+    m_msgArea.removeChild(m_msgArea.lastElementChild);
   };
 
 
@@ -197,17 +235,61 @@ createPostPagesLink = (linkText) =>{
      result.post_content = post_text;
      return result;
   };
-
+  const editorMsgHtml = `<p>Write a blog post in the text area below.
+   Write your post in HTML.  You must enter a Github issued OAUTH
+   token value in the text box below in order to save a post.
+   Note: this editor saves what you write to the github repository that
+   holds the data for your github pages site. </p>
+   <p>It takes a few minutes for whatever happens behind the scenes at
+   Github for your post to become visible in the Github pages site.</p>
+   <h2>Write a Blog Post</h2>
+  `;
   /**
    * loads blog posting form
    *
    * @param blogPostDiv: div that we attach blog posting form to
    */
-  ContentHandler.prototype.loadBlogPostForm = (blogPostDiv)=>{
+  ContentHandler.prototype.loadBlogPostForm = (blogPostDiv,
+      event=undefined)=>{
     while(blogPostDiv.firstChild){
       blogPostDiv.removeChild(blogPostDiv.firstChild);
     }
-    populateAreaHelper('blogPostForm.html', blogPostDiv);
+    let editorMsg = document.createElement('div');
+    editorMsg.innerHTML = editorMsgHtml;
+    blogPostDiv.appendChild(editorMsg);
+
+    let oauthText = document.createElement('INPUT');
+    oauthText.setAttribute('type', 'text');
+    oauthText.setAttribute('id', 'tokenText');
+    oauthText.setAttribute('name', 'tokenText');
+    let oauthTextDiv = document.createElement('div');
+    oauthTextDiv.appendChild(oauthText);
+    blogPostDiv.appendChild(oauthTextDiv);
+
+    let textArea = document.createElement('TEXTAREA');
+    textArea.setAttribute('id', 'post_text') ;
+    textArea.setAttribute('name', 'post_text');
+    textArea.setAttribute('rows', '20');
+    textArea.setAttribute('cols', '80');
+    if (event){
+      textArea.value = postObjArr[event.target.index].post_content;
+    }
+
+    let textAreaDiv = document.createElement('div');
+    textAreaDiv.appendChild(textArea);
+    blogPostDiv.appendChild(textAreaDiv);
+
+    let msgArea = document.createElement('div');
+    blogPostDiv.appendChild(msgArea);
+
+    let savePostLink = document.createElement('a');
+    savePostLink.innerText = "Save Post";
+    savePostLink.addEventListener("click", () => {
+      this.createPost(textArea, oauthText.value, msgArea);
+    });
+    savePostLinkDiv = document.createElement('div');
+    savePostLinkDiv.appendChild(savePostLink);
+    blogPostDiv.appendChild(savePostLinkDiv);
   };
 
    /**
@@ -227,7 +309,6 @@ createPostPagesLink = (linkText) =>{
        {method: 'GET'}).then(resp => resp.text()).then(text => {
          contentDiv = document.createElement('div');
          console.debug(dbg_tag, ' text ', text);
-         contentDiv.innerHTML = text;
          parentDiv.appendChild(contentDiv);
          console.debug(dbg_tag, 'parentDiv.firstElementChild',
            parentDiv.firstElementChild);
