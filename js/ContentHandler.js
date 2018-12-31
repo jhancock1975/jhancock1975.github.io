@@ -161,44 +161,6 @@ createPostPagesLink = (linkText) =>{
         blogPostSubmitted(msgAreaDiv);
       });
     };
-/**
- * displays a list of posts. user may click on a post to
- * view and edit
- *
- * @param blog_posts: div where we display the list
- */
- ContentHandler.prototype.listPosts = (blog_posts) => {
-   while(blog_posts.firstChild){
-     blog_posts.removeChild(blog_posts.firstChild);
-   }
-   for (index in postObjArr){
-     let postObjDiv = document.createElement('div');
-     let postObjLink = document.createElement('a');
-     postObjLink.index = index;
-     postObjLink.addEventListener('click', (event) =>{
-       loadPost(blog_posts, event);
-     });
-     let postDate = new Date();
-     postDate.setTime(postObjArr[index].post_change_time);
-     postObjLink.innerText = postDate.toString();
-     postObjDiv.appendChild(postObjLink);
-     blog_posts.appendChild(postObjDiv);
-   }
- };
-
- /**
-  * opens a blog post
-  * in the blog post editor
-  * @param blog_posts: div holding blog post editor
-  * @param postObj: blog post object
-  */
-  loadPost = (blog_posts, event) => {
-    console.log("ContentHandler::loadPost:event ", event);
-    while(blog_posts.firstChild){
-      blog_posts.removeChild(blog_posts.firstChild);
-    }
-    this.loadBlogPostForm(blog_posts, event);
-  };
 
  /**
    * callback function for actions after ContentHandler
@@ -235,6 +197,32 @@ createPostPagesLink = (linkText) =>{
      result.post_content = post_text;
      return result;
   };
+
+  /**
+   * displays a list of posts. user may click on a post to
+   * view and edit
+   *
+   * @param blog_posts: div where we display the list
+   */
+   ContentHandler.prototype.listPosts = (blog_posts) => {
+     while(blog_posts.firstChild){
+       blog_posts.removeChild(blog_posts.firstChild);
+     }
+     for (index in postObjArr){
+       let postObjDiv = document.createElement('div');
+       let postObjLink = document.createElement('a');
+       postObjLink.index = index;
+       postObjLink.addEventListener('click', (event) =>{
+         this.loadBlogPostForm(blog_posts, event);
+       });
+       let postDate = new Date();
+       postDate.setTime(postObjArr[index].post_change_time);
+       postObjLink.innerText = postDate.toString();
+       postObjDiv.appendChild(postObjLink);
+       blog_posts.appendChild(postObjDiv);
+     }
+   };
+
   const editorMsgHtml = `<p>Write a blog post in the text area below.
    Write your post in HTML.  You must enter a Github issued OAUTH
    token value in the text box below in order to save a post.
@@ -291,27 +279,4 @@ createPostPagesLink = (linkText) =>{
     savePostLinkDiv.appendChild(savePostLink);
     blogPostDiv.appendChild(savePostLinkDiv);
   };
-
-   /**
-    * this helper function factors out code that we call
-    * to load various parts of the site's page. We only use
-    * this to load the blog post form but we anticipate that
-    * we made need it for more later.
-    *
-    * @param htmlFragmentName: name of a file in the html/ directory.
-    * this directory is in the root of the site
-    * @param parentDiv: div that the html fragment will get
-    * attached to.
-    */
-   populateAreaHelper = (htmlFragmentName, parentDiv) => {
-     let dbg_tag = "ContentHandler::populateAreaHelper:";
-     fetch(site_settings[site_url]+'/html/'+htmlFragmentName,
-       {method: 'GET'}).then(resp => resp.text()).then(text => {
-         contentDiv = document.createElement('div');
-         console.debug(dbg_tag, ' text ', text);
-         parentDiv.appendChild(contentDiv);
-         console.debug(dbg_tag, 'parentDiv.firstElementChild',
-           parentDiv.firstElementChild);
-       });
-   };
  };
