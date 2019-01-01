@@ -57,7 +57,7 @@ function GitHubBroker(){
    */
   GitHubBroker.prototype.get_posts_from_file = async() => {
     let dbg_tag = 'GitHubBroker::get_posts_from_file';
-    let fetch_obj = {method: 'GET'};
+    let fetch_obj = {cache: 'no-store', method: 'GET'};
     // we are using the repository name for the base url because
     // the github.io free web hosting they give uses the repository
     // name as the host name

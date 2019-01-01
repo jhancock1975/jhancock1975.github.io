@@ -141,11 +141,12 @@ createPostPagesLink = (linkText) =>{
   return postPageListLink;
 };
 
- ContentHandler.prototype.createPost =
-   async (post_text, oauthToken, msgAreaDiv) => {
-    let dbg_tag = 'ContentHandler::createPost:';
+ ContentHandler.prototype.createOrUpdatePost =
+   async (post_text, oauthToken, msgAreaDiv, index=undefined) => {
+    let dbg_tag = 'ContentHandler::createOrUpdatePost:';
     console.debug(dbg_tag + 'posting text: ', post_text.value);
     console.debug(dbg_tag + 'oauthToken: ', oauthToken);
+    console.debug(dbg_tag + ' index ', index);
     let blogPostedMsg = document.createElement('p');
     blogPostedMsg.innerText = 'Saving blog post ...';
     msgAreaDiv.appendChild(blogPostedMsg);
@@ -153,7 +154,14 @@ createPostPagesLink = (linkText) =>{
     if ((postObjArr === undefined) || (postObjArr.length < 1)){
       postObjArr = await gitHubBroker.get_posts_from_file(oauthToken);
     }
-    postObjArr.push(createPostObj(post_text.value));
+    if ((index !== undefined) && (index !== '')){
+      //update
+      postObjArr[index].post_content = post_text.value;
+    } else {
+      //create
+        postObjArr.push(createPostObj(post_text.value));
+    }
+
     gitHubBroker.save_post(JSON.stringify(postObjArr), oauthToken,
       'index.json')
       .then((blogPostResult) => {
@@ -259,8 +267,10 @@ createPostPagesLink = (linkText) =>{
     textArea.setAttribute('name', 'post_text');
     textArea.setAttribute('rows', '20');
     textArea.setAttribute('cols', '80');
+    let index = undefined;
     if (event){
       textArea.value = postObjArr[event.target.index].post_content;
+      index= event.target.index;
     }
 
     let textAreaDiv = document.createElement('div');
@@ -273,7 +283,8 @@ createPostPagesLink = (linkText) =>{
     let savePostLink = document.createElement('a');
     savePostLink.innerText = "Save Post";
     savePostLink.addEventListener("click", () => {
-      this.createPost(textArea, oauthText.value, msgArea);
+      this.createOrUpdatePost(textArea, oauthText.value, msgArea,
+        index);
     });
     savePostLinkDiv = document.createElement('div');
     savePostLinkDiv.appendChild(savePostLink);
