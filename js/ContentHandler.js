@@ -179,7 +179,7 @@ createPostPagesLink = (linkText) =>{
     gitHubBroker.save_post(JSON.stringify(postObjArr), oauthToken,
       'index.json')
       .then((blogPostResult) => {
-        post_text.value='';
+        //post_text.value='';
         blogPostSubmitted(msgAreaDiv);
       });
     };
