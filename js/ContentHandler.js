@@ -22,15 +22,17 @@ function ContentHandler(){
   //for reference to message area for message update timeout function
   let m_msgArea;
 
+  let m_oauthToken;
+
   /**
    * fetches post using OAUTH token for authentication
    *
    * @param tokenText: DOM text input element, mean to hold an OAUTH token
    */
   ContentHandler.prototype.fetchPosts =
-    async (blogPostsDiv, postPagesDiv, start_index=0) => {
+    async (blogPostsDiv, postPagesListContainer, start_index=0) => {
     let dbg_tag = 'ContentHandler::fetchPosts:';
-    postObjArr = await gitHubBroker.get_posts_from_file();
+    postObjArr = await gitHubBroker.get_posts_from_file(m_oauthToken);
     console.debug(dbg_tag, ' postObjArr ', postObjArr);
     postObjArr.sort( (a,b) => {
       keyA = a.post_change_time;
@@ -45,16 +47,16 @@ function ContentHandler(){
     for (i=0; ((i+start_index) < postObjArr.length && i < max_posts_display); i++){
       console.debug(dbg_tag, ' postObjArr ' + (i + start_index) + ": ",
         postObjArr[i+start_index]);
-      postDiv = document.createElement('div');
-      postDate = new Date(1970,0,1);
+      let postDiv = document.createElement('div');
+      let postDate = new Date(1970,0,1);
       postDate.setTime(postObjArr[i+start_index][post_change_time]);
       postDiv.innerHTML = '<p>' + postDate + '</p>';
       postDiv.innerHTML += postObjArr[i+start_index][post_content];
       postDiv.setAttribute('class', 'blogpost');
       blogPostsDiv.appendChild(postDiv);
     }
-    renderPaginationList(blogPostsDiv, postPagesDiv,
-       postObjArr.length,start_index);
+    renderPaginationList(blogPostsDiv, postPagesListContainer,
+      postObjArr.length, start_index);
   };
 /**
  * renders a list of links to posts beneath the
@@ -66,18 +68,18 @@ function ContentHandler(){
  * @param postObjArr_length: total number of blog posts
  * @param start_index: current starting post index number
  */
-renderPaginationList = (blogPostsDiv, postPagesDiv, postObjArr_length,
+renderPaginationList = (blogPostsDiv, postPagesListContainer, postObjArr_length,
   start_index) => {
   let dbg_tag = "ContentHandler::renderPaginationList:";
 
-  while(postPagesDiv.firstChild){
-    postPagesDiv.removeChild(postPagesDiv.firstChild);
+  while(postPagesListContainer.firstChild){
+    postPagesListContainer.removeChild(postPagesListContainer.firstChild);
   }
 
   let postPagesLabel = document.createElement('div');
   postPagesLabel.setAttribute('class', 'PostPages');
   postPagesLabel.innerText='More Postings';
-  postPagesDiv.appendChild(postPagesLabel);
+  blogPostsDiv.appendChild(postPagesLabel);
 
   let postPagesListDiv = document.createElement('div');
   postPagesListDiv.setAttribute('class', 'PostPages');
@@ -106,7 +108,7 @@ renderPaginationList = (blogPostsDiv, postPagesDiv, postObjArr_length,
       //offset otherwise FireFox, at least
       //will use final value of count here
       let fn_startidx=start_index+count;
-      this.fetchPosts(blogPostsDiv, postPagesDiv, fn_startidx);
+      this.fetchPosts(blogPostsDiv, fn_startidx);
     });
     postPagesListDiv.appendChild(numberLink);
     count++;
@@ -122,8 +124,8 @@ renderPaginationList = (blogPostsDiv, postPagesDiv, postObjArr_length,
     nextLink.href = "javascript: void(0)";
   }
   postPagesListDiv.appendChild(nextLink);
-
-  postPagesDiv.appendChild(postPagesListDiv);
+  postPagesListContainer.appendChild(postPagesListDiv);
+  blogPostsDiv.appendChild(postPagesListDiv);
 };
 
 /**
@@ -146,6 +148,7 @@ createPostPagesLink = (linkText) =>{
     let dbg_tag = 'ContentHandler::createOrUpdatePost:';
     console.debug(dbg_tag + 'posting text: ', post_text.value);
     console.debug(dbg_tag + 'oauthToken: ', oauthToken);
+    m_oauthToken = oauthToken;
     console.debug(dbg_tag + ' index ', index);
     let blogPostedMsg = document.createElement('p');
     blogPostedMsg.innerText = 'Saving blog post ...';

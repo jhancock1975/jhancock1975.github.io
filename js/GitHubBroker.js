@@ -46,33 +46,43 @@ function GitHubBroker(){
    * it expects there to be a directory called posts in the
    * top level of the repository, and invokes content handler's
    * callback to process post contents.
-   * Currently this method only fetches files with a file name that
-   * ends with .json.
+   * Currently this method only fetches the file posts/index.json
+   * in the repository linked to the Github pages account.
    *
    * @param tokenText: user supplied oauth token, user must request
-   *  token from Github
+   *  token from Github, if the caller does not supply a value
+   *  for this parameter, we fetch the posts using the Github pages
+   *  url for posts/index.json.  Otherwise we use the Github
+   *  API to fetch posts/index.json.  When we use the Github API
+   *  changes to posts/index.json reflect immediately.
+   *
    *
    * @param contentHandlerCallback: callback function for processing file
    * contents
    */
-  GitHubBroker.prototype.get_posts_from_file = async() => {
+  GitHubBroker.prototype.get_posts_from_file =
+    async(oauthToken = undefined) => {
     let dbg_tag = 'GitHubBroker::get_posts_from_file';
-    let fetch_obj = {cache: 'no-store', method: 'GET'};
-    // we are using the repository name for the base url because
-    // the github.io free web hosting they give uses the repository
-    // name as the host name
-    let blog_posts_url = 'https://' + site_settings[repo_name]
-      +'/posts/index.json';
-    var response = await fetch(blog_posts_url , fetch_obj);
-    var blog_posts_arr = await response.json();
-    console.debug(dbg_tag, ' blog_posts_arr ', blog_posts_arr);
+    let  blog_posts_arr;
+    if (oauthToken === undefined){
+      let fetch_obj = {cache: 'no-store', method: 'GET'};
+      // we are using the repository name for the base url because
+      // the github.io free web hosting they give uses the repository
+      // name as the host name
+      let blog_posts_url = 'https://' + site_settings[repo_name]
+        +'/posts/index.json';
+      var response = await fetch(blog_posts_url , fetch_obj);
+      blog_posts_arr = await response.json();
+      console.debug(dbg_tag, ' blog_posts_arr ', blog_posts_arr);
+    } else {
+      blog_posts_arr = await git_file_contents('posts/index.json',
+        oauthToken);
+      blog_posts_arr  = JSON.parse(
+         atob(blog_posts_arr[content])
+         .replace(/(\r\n\t|\n|\r\t)/gm,""));
+    }
     return blog_posts_arr;
   };
-
-   //temporary list to hold all posts for
-   //writing to index.json
-   //this list should go away in the near future
-   var file_contents_arr = [];
 
    /**
     * retrieves file contents from github using path
@@ -86,24 +96,14 @@ function GitHubBroker(){
     *
     *  @return  base 64 decoded equivalent of file contents
     */
-  git_file_contents = (file_path, tokenText) => {
+  git_file_contents = async (file_path, tokenText) => {
     let dbg_tag = 'GitHubBroker::git_file_contents:';
     console.log(dbg_tag, ' file_path ', file_path, 'token text ', tokenText);
-    github_api_call(file_path, 'GET', tokenText)
-      .then((blog_post) => {
-      //we have the individual posts
-      console.debug(dbg_tag, 'blog_post ', blog_post);
-
-      //this is temporary code to store all posts in a file
-      //index.json
-      file_contents_arr.push (
-         JSON.parse(
-          atob(blog_post[content])
-           .replace(/(\r\n\t|\n|\r\t)/gm,"")));
-
-      console.debug(dbg_tag, ' result ', result);
-      return result;
-    });
+    blog_post = await github_api_call('repos/'+site_settings[user_id]
+      + '/' + site_settings[repo_name] + '/contents/'
+      + file_path, 'GET', tokenText);
+    console.debug(dbg_tag, 'blog_post ', blog_post);
+    return blog_post;
   };
 
   const name = 'name';
