@@ -93,7 +93,7 @@ renderPaginationList = (blogPostsDiv, postPagesListContainer, postObjArr_length,
   let prevLink = createPostPagesLink("<<");
   if (start_index >= max_posts_display){
     prevLink.onclick = () => {
-      this.fetchPosts(blogPostsDiv, postPagesDiv,
+      this.fetchPosts(blogPostsDiv, postPagesListContainer,
       start_index - max_posts_display);
     };
   } else {
@@ -114,7 +114,7 @@ renderPaginationList = (blogPostsDiv, postPagesListContainer, postObjArr_length,
       //offset otherwise FireFox, at least
       //will use final value of count here
       let fn_startidx=start_index+count;
-      this.fetchPosts(blogPostsDiv, fn_startidx);
+      this.fetchPosts(blogPostsDiv, postPagesListContainer, fn_startidx);
     });
     postPagesListDiv.appendChild(numberLink);
     count++;
@@ -123,7 +123,7 @@ renderPaginationList = (blogPostsDiv, postPagesListContainer, postObjArr_length,
   let nextLink = createPostPagesLink(">>");
   if (start_index + max_posts_display < postObjArr_length){
     nextLink.onclick = () => {
-      this.fetchPosts(blogPostsDiv, postPagesDiv,
+      this.fetchPosts(blogPostsDiv, postPagesListContainer,
          start_index + max_posts_display);
        };
   } else {
