@@ -23,7 +23,12 @@ function ContentHandler(){
   let m_msgArea;
 
   let m_oauthToken;
-
+  ContentHandler.prototype.getOauthToken = () =>{
+    return m_oauthToken;
+  };
+  ContentHandler.prototype.setOauthToken = (oauthToken) =>{
+     m_oauthToken = oauthToken;
+  };
   /**
    * fetches post using OAUTH token for authentication
    *

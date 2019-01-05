@@ -65,6 +65,8 @@ function GitHubBroker(){
     let dbg_tag = 'GitHubBroker::get_posts_from_file';
     let  blog_posts_arr;
     if (oauthToken === undefined){
+      console.debug(dbg_tag, 'no oauthToken passed, fetching page from');
+      console.debug(dbg_tag, 'github pages url');
       let fetch_obj = {cache: 'no-store', method: 'GET'};
       // we are using the repository name for the base url because
       // the github.io free web hosting they give uses the repository
@@ -75,6 +77,8 @@ function GitHubBroker(){
       blog_posts_arr = await response.json();
       console.debug(dbg_tag, ' blog_posts_arr ', blog_posts_arr);
     } else {
+      console.debug(dbg_tag, ' using oauthToken ', oauthToken);
+      console.debug(dbg_tag, ' to fetch posts using github api');
       blog_posts_arr = await git_file_contents('posts/index.json',
         oauthToken);
       blog_posts_arr  = JSON.parse(
