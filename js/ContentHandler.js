@@ -37,6 +37,12 @@ function ContentHandler(){
     postObjArr.sort( (a,b) => {
       keyA = a.post_change_time;
       keyB = b.post_change_time;
+      if (keyA == undefined){
+        return 1;
+      }
+      if (keyB == undefined ){
+        return -1;
+      }
       if (keyA < keyB) return 1;
       if (keyA > keyB) return -1;
       return 0;
