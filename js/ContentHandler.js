@@ -168,19 +168,23 @@ createPostPagesLink = (linkText) =>{
     if ((postObjArr === undefined) || (postObjArr.length < 1)){
       postObjArr = await gitHubBroker.get_posts_from_file(oauthToken);
     }
+    //If the  user has clicked save post before, post_text.index
+    //has a value.
+    index = index || post_text.index;
     if ((index !== undefined) && (index !== '')){
       //update
       postObjArr[index].post_content = post_text.value;
     } else {
       //create
         postObjArr.push(createPostObj(post_text.value));
+        post_text.index = postObjArr.length -1;
     }
 
     gitHubBroker.save_post(JSON.stringify(postObjArr), oauthToken,
       'index.json')
       .then((blogPostResult) => {
         //post_text.value='';
-        blogPostSubmitted(msgAreaDiv);
+        blogPostSubmitted(msgAreaDiv, index);
       });
     };
 
